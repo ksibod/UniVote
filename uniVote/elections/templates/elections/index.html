@@ -1,0 +1,9 @@
+{% if latest_election_list %}
+    <ul>
+    {% for election in latest_election_list %}
+        <li><a href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No polls are available.</p>
+{% endif %}
