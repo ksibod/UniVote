@@ -1,7 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import AuthenticationForm
-from django.shortcuts import render_to_response
+from django.contrib.auth import authenticate, cationForm
+from django.shortcuts import render_to_response, render
 from django.core.context_processors import csrf
 
 #Import a user registration form
@@ -50,7 +49,7 @@ def user_register(request):
             form = UserRegisterForm(request.POST)
             if form.is_valid:
                 form.save()
-                return HttpResponse('User created succcessfully.')
+                return render(request, 'accounts/registered.html')
         else:
             form = UserRegisterForm()
         context = {}
