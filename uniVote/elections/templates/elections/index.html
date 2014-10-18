@@ -4,6 +4,7 @@
         <li><a href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a></li>
     {% endfor %}
     </ul>
+    <a href="/accounts/logout">logout</a>
 {% else %}
     <p>No polls are available.</p>
 {% endif %}
