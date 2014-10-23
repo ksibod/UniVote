@@ -5,5 +5,5 @@
     <li>{{ candidate.candidate_name }} -- {{ candidate.votes }} vote{{ candidate.votes|pluralize }}</li>
 {% endfor %}
 </ul>
-
+<a href="/accounts/logout">logout</a>
 <a href="{% url 'elections:detail' election.id %}">Vote again?</a>

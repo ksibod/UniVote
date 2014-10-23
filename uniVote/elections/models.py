@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone as tz
 
 
+# this Election class is represented in the db
 class Election(models.Model):
     def __unicode__(self):
         return self.election_text
@@ -21,9 +22,11 @@ class Election(models.Model):
     in_election_window.short_description = 'In election window?'
 
 
+# Each candiate is represented in the db
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
+    # each candidate is related to an election
     election = models.ForeignKey(Election)
     candidate_name = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)

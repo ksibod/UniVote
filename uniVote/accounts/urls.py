@@ -1,9 +1,10 @@
 from django.conf.urls import patterns, url
 
+# These urlpatterns are responsible for handling urls starting with:
+# /accounts/...    :
 urlpatterns = patterns(
     '',
     # ex: /accounts/login/
-    # url(r'^login/$', 'accounts.views.user_login'),
     url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
         'accounts/login.html'}),
     # ex: /accounts/logout/

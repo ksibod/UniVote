@@ -8,6 +8,7 @@ class CandidateInLine(admin.TabularInline):
     extra = 3
 
 
+# This class represents the properties avaiable oat the admin panel at /admin/:
 class ElectionAdmin(admin.ModelAdmin):
     fieldsets = [
         (None,                  {'fields': ['election_text']}),

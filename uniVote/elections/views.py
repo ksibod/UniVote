@@ -25,6 +25,8 @@ class ResultsView(generic.DetailView):
     template_name = 'elections/results.html'
 
 
+# Called whenever a user makes a vote:
+### HERE SHOULD CHECK IF request.user is authenticated BEFORE THEY CAN VOTE:
 def vote(request, election_id):
     p = get_object_or_404(Election, pk=election_id)
     try:
