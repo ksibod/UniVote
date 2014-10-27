@@ -18,9 +18,9 @@ def user_login(request):
             # NEED A FORM FOR USER TO LOGIN:
 
             username = request.POST['username']
-            password = request.POST['password']
+           # password = request.POST['password']
             #This authenticates the user
-            user = authenticate(username=username, password=password)
+            user = authenticate(username=username)#password=password)
             if user is not None:
                 if user.is_active:
                     # This logs him in:
