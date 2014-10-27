@@ -41,6 +41,7 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     return HttpResponse('YOU HAVE BEEN LOGGED OUT.')
+    # return render(request, 'accounts.logout.html')
 
 
 # User Register View
