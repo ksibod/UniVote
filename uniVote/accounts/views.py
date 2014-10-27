@@ -18,9 +18,9 @@ def user_login(request):
             # NEED A FORM FOR USER TO LOGIN:
 
             username = request.POST['username']
-           # password = request.POST['password']
+            password = request.POST['password']
             #This authenticates the user
-            user = authenticate(username=username)#password=password)
+            user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     # This logs him in:
@@ -58,6 +58,7 @@ def user_register(request):
         context.update(csrf(request))
         context['form'] = form
         #Pass the context to a template
-        return render_to_response('accounts/register.html', context)
+        return render(request, 'accounts/register.html', context)
+        # return render_to_response('accounts/register.html', context)
     else:
         return HttpResponseRedirect('/')

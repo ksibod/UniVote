@@ -5,8 +5,10 @@ from django.conf.urls import patterns, url
 urlpatterns = patterns(
     '',
     # ex: /accounts/login/
-    url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
+    url(r'^$', 'django.contrib.auth.views.login', {'template_name':
         'accounts/login.html'}),
+    #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
+    #    'accounts/login.html'}),
     # ex: /accounts/logout/
     url(r'^logout/$', 'accounts.views.user_logout'),
     # ex: /accounts/register/
