@@ -1,7 +1,6 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}login.css" />
 
 {% block content %}
-{% csrf_token %}
 {% if form.errors %}
         <!-- TODO:  Make a popup for when the credentials are incorrect. -->
 <p>Your username and password didn't match. Please try again.</p>
