@@ -1,3 +1,63 @@
 body
-{background-color:red;}
+{
+    background-color: white;
+    font-family: Helvetica;
+    text-align: center;
+}
+
+
+#uniLogo
+{
+    margin-top: 6em;
+    border-radius: 30px;
+    height: 250px;
+    width: 900px;
+}
+
+
+table
+{
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+#login
+{
+    margin-top: 2em;
+    margin-left: auto;
+    margin-right: auto;
+    border: solid gray 1px;
+    border-radius: 8px;
+    width: 300px;
+    height: auto;
+}
+
+
+
+#loginButton
+{
+    margin-top: 1em;
+    margin-bottom: 2em;
+    width: 80px;
+    height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    background-image: -moz-linear-gradient(top, #acd6ef, #6495ed);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#acd6ef), to(#6495ed));
+    border-radius: 3px;
+    border: 1px solid #66add6;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .5);
+    cursor: pointer;
+    outline: none;
+}
+
+
+
+.bottomRow
+{
+    height: 20px;
+}
 
