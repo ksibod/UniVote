@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone as tz
+from django.contrib.auth.models import User
 
 
 # this Election class is represented in the db
@@ -30,3 +31,11 @@ class Candidate(models.Model):
     election = models.ForeignKey(Election)
     candidate_name = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
+
+
+# Extending the existing User model to allow user to vote once per election:
+# https://docs.djangoproject.com/en/1.7/topics/auth/customizing/#extending-the-existing-user-model
+class Voter(models.Model):
+    user = models.OneToOneField(User)
+    election = models.ForeignKey(Election)
+    is_approved = models.BooleanField(default=False)
