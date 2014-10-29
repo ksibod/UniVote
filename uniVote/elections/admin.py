@@ -10,10 +10,9 @@ class CandidateInLine(admin.TabularInline):
     extra = 3
 
 
-class VoterInline(admin.StackedInline):
+class VoterInline(admin.TabularInline):
     model = Voter
-    can_vote = False
-    verbose_name_plural = 'voterrrr'
+    verbose_name_plural = 'Voter Approval'
 
 
 # This class represents the properties avaiable oat the admin panel at /admin/:

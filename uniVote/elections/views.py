@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from elections.models import Candidate, Election
+from elections.models import Candidate, Election, Voter
 
 
 class IndexView(generic.ListView):
@@ -13,6 +13,8 @@ class IndexView(generic.ListView):
     def get_queryset(self):
         """Return the last five published elections."""
         return Election.objects.order_by('-start_date')[:5]
+
+        ### NEED A FUNCTION TO GET RETURN ONLY ELECTIONS VOTER IS APPROVED FOR
 
 
 class DetailView(generic.DetailView):
