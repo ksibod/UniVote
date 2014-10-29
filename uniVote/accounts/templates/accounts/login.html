@@ -1,18 +1,21 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}login.css" />
-<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/sweet-alert.css">
+<script type="text/javascript" src="{{ STATIC_URL }}lib/sweet-alert.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL}}script.js"></script>
 
 
 {% block content %}
 {% if form.errors %}
-        <!-- TODO:  Make a popup for when the credentials are incorrect. -->
-<p>Your username and password didn't match. Please try again.</p>
+        <script>invalidCredentials();</script>
 {% endif %}
+
+<img id="uniLogo" src="/static/images/uniVote.png" />
 
 <form method="post" action="{% url 'django.contrib.auth.views.login' %}">
 {% csrf_token %}
-
-    <img id="uniLogo" src="/static/images/uniVote.png" />
 
 <div id="login">
     <table>
@@ -35,6 +38,12 @@
     <input type="hidden" name="next" value="/elections/" />
 </div>
 </form>
-<a href="/accounts/register">Register to Vote!</a>
+
+<!-- This div is for the popup showing invalid credentials have been used to login  -->
+<div class="denied">
+    <img id="xmark" src="/static/images/xmark.png" />
+    <div id="deniedText"></div>
+</div>
+
 
 {% endblock %}

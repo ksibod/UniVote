@@ -58,8 +58,20 @@ table
 
 
 
+
 .bottomRow
 {
     height: 20px;
 }
 
+
+
+.denied
+{
+    display: none;
+}
+
+#deniedText
+{
+    text-align: center;
+}
