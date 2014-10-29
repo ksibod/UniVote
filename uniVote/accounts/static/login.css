@@ -12,6 +12,7 @@ body
     border-radius: 30px;
     height: 250px;
     width: 900px;
+	display: none;
 }
 
 
@@ -32,6 +33,7 @@ table
     border-radius: 8px;
     width: 300px;
     height: auto;
+	display: none;
 }
 
 
