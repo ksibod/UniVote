@@ -33,7 +33,8 @@ def user_login(request):
 
             else:
                 return HttpResponse("Wrong username/password")
-
+    else:
+        return HttpResponseRedirect("/elections")
     return HttpResponseRedirect("/")
 
 

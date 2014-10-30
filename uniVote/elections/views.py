@@ -14,8 +14,6 @@ class IndexView(generic.ListView):
         """Return the last five published elections."""
         return Election.objects.order_by('-start_date')[:5]
 
-        ### NEED A FUNCTION TO GET RETURN ONLY ELECTIONS VOTER IS APPROVED FOR
-
 
 class DetailView(generic.DetailView):
     model = Election

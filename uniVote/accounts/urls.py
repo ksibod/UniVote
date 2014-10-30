@@ -4,7 +4,7 @@ from django.conf.urls import patterns, url
 # /accounts/...    :
 urlpatterns = patterns(
     '',
-    # ex: /accounts/login/
+    # ex: /
     url(r'^$', 'django.contrib.auth.views.login', {'template_name':
         'accounts/login.html'}),
     #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
