@@ -1,6 +1,6 @@
 body
 {
-    background-color: white;
+    background-color: #3498db;
     font-family: Helvetica;
     text-align: center;
 }
@@ -33,6 +33,7 @@ table
     border-radius: 8px;
     width: 300px;
     height: auto;
+    background-color: #ecf0f1;
 	display: none;
 }
 
@@ -41,7 +42,7 @@ table
 #loginButton
 {
     margin-top: 1em;
-    margin-bottom: 2em;
+    margin-bottom: 1em;
     width: 80px;
     height: 30px;
     font-size: 14px;
@@ -74,4 +75,11 @@ table
 #deniedText
 {
     text-align: center;
+}
+
+#createAccountButton
+{
+    display: inline-block;
+    text-decoration: none;
+    color: #3498db;
 }

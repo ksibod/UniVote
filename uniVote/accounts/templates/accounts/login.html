@@ -31,12 +31,16 @@
             <td>{{ form.password.label_tag }}</td>
         </tr>
         <tr>
-            <td class="bottomRow">{{ form.password }}</td>
+            <td  class="bottomRow">{{ form.password }}</td>
         </tr>
     </table>
 
     <input id="loginButton" type="submit" value="Login" />
     <input type="hidden" name="next" value="/elections/" />
+
+    <br>
+    <p style="display: inline-block;">No account?</p>
+    <a id="createAccountButton" href="/accounts/register">Create one!</a>
 </div>
 </form>
 
