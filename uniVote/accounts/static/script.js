@@ -6,7 +6,6 @@ function dothefunc()
 {
 	$("#uniLogo").fadeIn("3000");
 	$("#login").slideToggle("slow");
-	console.log("yolo dawg");
 }
 
 
@@ -20,5 +19,4 @@ function invalidCredentials()
                  type: "error"});
     }, 500);
     console.log("showing the popup");
-    return false;
 }
