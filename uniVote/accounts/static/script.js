@@ -5,7 +5,7 @@ $(document).ready(function() {
 function dothefunc()
 {
 	$("#uniLogo").fadeIn("3000");
-	$("#login").slideToggle("slow");
+	$("#login").fadeIn("3000");
 }
 
 
@@ -19,4 +19,11 @@ function invalidCredentials()
                  type: "error"});
     }, 500);
     console.log("showing the popup");
+}
+
+
+// Function to show the popup when the create account button is pressed on the login page
+function createAccount()
+{
+    $("#createUser").fadeIn("slow");
 }

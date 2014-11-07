@@ -5,7 +5,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}lib/sweet-alert.min.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL}}script.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
 
 
 {% block content %}
@@ -40,15 +40,11 @@
 
     <br>
     <p style="display: inline-block;">No account?</p>
-    <a id="createAccountButton" href="/accounts/register">Create one!</a>
+    <a id="createAccountButton" href="javascript:createAccount();">Create one!</a>
 </div>
 </form>
 
-<!-- This div is for the popup showing invalid credentials have been used to login  -->
-<div class="denied">
-    <img id="xmark" src="/static/images/xmark.png" />
-    <div id="deniedText"></div>
-</div>
+
 
 
 {% endblock %}

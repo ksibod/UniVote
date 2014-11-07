@@ -2,8 +2,12 @@ import datetime
 
 from django.utils import timezone
 from django.test import TestCase
+from django.test.client import Client
+from django.contrib.auth.models import User
 
-from elections.models import Election
+from models import Election
+from models import Voter
+
 
 
 # Create your tests here.
@@ -38,3 +42,16 @@ class ElectionMethodTests(TestCase):
         end_time = timezone.now() + datetime.timedelta(days=30)
         current_election = Election(start_date=start_time, end_date=end_time)
         self.assertEqual(current_election.in_election_window(), True)
+
+    def test_user_login(self):
+        """
+           This tests both the creation of a user and that user login   KS
+        """
+        self.client = Client()
+        self.username = 'test'
+        self.email = 'test@test.com'
+        self.password = 'test'
+
+        self.test_user = User.objects.create_user(self.username, self.email, self.password)
+        login = self.client.login(username=self.username, password=self.password)
+        self.assertEqual(login, True)
