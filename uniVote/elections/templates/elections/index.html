@@ -1,9 +1,38 @@
 <link rel="stylesheet" href="{{ STATIC_URL }}homepage.css" />
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
+<style>
+table, th, td {
+	border: 0px solid red;
+	padding: 5px;
+}
+table#t01 {
+    width: 100%; 
+    background-color: #F00000;
+	border-collapse: collapse;
+}
 
-
-
+table#t01 tr:nth-child(odd) {
+    background-color: #D0D0D0;
+}
+table#t01 tr:nth-child(even) {
+    background-color: #ffffff;
+}
+table#t01 th {
+    color: white;
+    background-color: black;
+}
+table#t01 td#td02 {
+    color: red;
+	width: 20%;
+	text-align: center;
+}
+table#t01 td#td03 {
+    color: red;
+	width: 20%;
+	text-align: center;
+}
+</style>
 
 <a id="logoutButton" href="/accounts/logout">Logout</a>
 
@@ -18,13 +47,22 @@
 
 {% if latest_election_list %}
 
-    <h2>Elections</h2>
-
-    <ul style="list-style-type: none;">
+    <h3>Elections</h3>
+	<table id="t01">
+		<tr>
+			<th style="text-align: left">Election Name</th>
+			<th>Start Time</th>
+			<th>End Time</th>
+		</tr>
+   <!-- <ul style="list-style-type: none;"> -->
     {% for election in latest_election_list %}
-        <li><a class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a></li>
+        <tr class="electionList" style="color:blue" onclick="location.href='{% url 'elections:detail' election.id %}'"><td>
+			<!--><a style="color: blue" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a> --></td>
+			<td id="td02">{{ election.start_date }}</td>
+			<td id="td03">{{ election.end_date }}</td>
+		</tr>
     {% endfor %}
-    </ul>
+   <!-- </ul> -->
 
 {% else %}
     <p>No polls are available.</p>
