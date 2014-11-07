@@ -8,6 +8,15 @@
 <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
 
 
+
+
+
+
+<!-- For the create account popup -->
+<div id="modal"></div>
+<div id="createUser"></div>
+
+
 {% block content %}
 {% if form.errors %}
         <script>invalidCredentials();</script>
@@ -39,10 +48,11 @@
     <input type="hidden" name="next" value="/elections/" />
 
     <br>
-    <p style="display: inline-block;">No account?</p>
+    <p style="display: inline-block;">No account? &nbsp</p>
     <a id="createAccountButton" href="javascript:createAccount();">Create one!</a>
 </div>
 </form>
+
 
 
 

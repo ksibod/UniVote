@@ -5,7 +5,7 @@ from django.shortcuts import render_to_response, render
 from django.core.context_processors import csrf
 
 #Import a user registration form
-from accounts.forms import UserRegisterForm
+from forms import UserRegisterForm
 
 # User authentication in Django
 # https://docs.djangoproject.com/en/dev/topics/auth/
