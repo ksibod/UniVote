@@ -2,9 +2,6 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
 
-
-
-
 <a id="logoutButton" href="/accounts/logout">Logout</a>
 
 {% if request.user.is_staff %}
@@ -12,9 +9,7 @@
     <a id="adminButton" href="/admin/">Administration Panel</a>
 {% endif %}
 
-
 <img id="uniLogo" src="/static/images/uniVote.png" />
-
 
 {% if latest_election_list %}
 
@@ -25,15 +20,27 @@
 			<th>Start Time</th>
 			<th>End Time</th>
 		</tr>
-   <!-- <ul style="list-style-type: none;"> -->
+		
     {% for election in latest_election_list %}
-        <tr class="electionList" style="color:blue" onclick="location.href='{% url 'elections:detail' election.id %}'"><td>
-			<!--><a style="color: blue" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a> --></td>
+        <tr class="electionList" style="color:blue" onclick="location.href='{% url 'elections:detail' election.id %}'">
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
+			
+			
+		{% if election.is_closed %}
+			<td id="td02">Closed</td>
+			<td id="td03">Closed</td>
+
+		{% elif election.is_in_election_window %}
+			<td id="td02">Open</td>
+			<td id="td03">{{ election.end_date }}</td>
+
+		{% else %}
 			<td id="td02">{{ election.start_date }}</td>
 			<td id="td03">{{ election.end_date }}</td>
+		{% endif %}
 		</tr>
+		
     {% endfor %}
-   <!-- </ul> -->
 
 {% else %}
     <p id="noElects">No polls are available.</p>
