@@ -15,6 +15,12 @@ class Election(models.Model):
             return True
         else:
             return False
+            
+    def is_closed(self):
+        if tz.now() > self.end_date:
+            return True
+        else:
+            return False
 
     election_text = models.CharField(max_length=200)
     start_date = models.DateTimeField('date election starts')
