@@ -4,9 +4,17 @@
 
 <form action="{% url 'elections:vote' election.id %}" method="post">
 {% csrf_token %}
-{% for candidate in election.candidate_set.all %}
-    <input type="radio" name="candidate" id="candidate{{ forloop.counter }}" value="{{ candidate.id }}" />
+
+{% for race in election.race_set.all %}
+	<label for="race{{ forloop.counter }}">{{ race.race_name }}</label>
+	<p>{{ race.race_description }}</p><br />
+	
+	{% for candidate in race.candidate_set.all %} 
+    <input type="radio" name="candidate" id="candidate{{ forloop.counter }}" 
+				value="{{ candidate.id }}" />
     <label for="candidate{{ forloop.counter }}">{{ candidate.candidate_name }}</label><br />
+	{% endfor %}
+
 {% endfor %}
 <input type="submit" value="Vote" />
 </form>
