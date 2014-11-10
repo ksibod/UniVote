@@ -30,12 +30,21 @@ class Election(models.Model):
     in_election_window.short_description = 'In election window?'
 
 
+class Race(models.Model):
+    def __unicode__(self):
+        return self.race_name 
+        
+    election = models.ForeignKey(Election)
+    race_name = models.CharField(max_length=200, default='') 
+    race_description = models.CharField(max_length=200, default='')
+    race_detail = models.CharField(max_length=200, default='')
+    
 # Each candiate is represented in the db
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
     # each candidate is related to an election
-    election = models.ForeignKey(Election)
+    race = models.ForeignKey(Race)
     candidate_name = models.CharField(max_length=200)
     votes = models.IntegerField(default=0)
 

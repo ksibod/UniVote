@@ -3,7 +3,7 @@ from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
 from django.views import generic
 
-from elections.models import Candidate, Election, Voter
+from elections.models import Race, Candidate, Election, Voter
 
 
 class IndexView(generic.ListView):
