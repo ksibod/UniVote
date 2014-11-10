@@ -55,11 +55,43 @@ class Voter(models.Model):
     user = models.ForeignKey(User)
     # user = models.OneToOneField(User)
     election = models.ForeignKey(Election)
-    approved = models.BooleanField(default=False)
 
+    # Hold election information for each user
+    # This will be a dictionary that will hold each election that the voter is approved for.
+    # After voting we can set that election to false, so they can no longer vote
+    elections = {models.ForeignKey(Election): True}
 
-    def is_approved(self):
-        if self.approved:
-            return True
-        else:
-            return False
+    #approved = models.BooleanField(default=False)
+
+    def is_approved(self, election_name):
+        #iterate through user 'elections' dictionary
+        for i, test in self.elections:
+            if i.election_text == election_name:
+                #if approved and value is true
+                if test:
+                    return True
+                #if approved but already voted
+                else:
+                    return False
+
+        # Voter is not approved for this election
+        return False
+
+    def add_election(self, election_object):
+        self.elections.update({election_object: True})
+
+    def delete_election(self, election_object):
+        for i, test in self.elections:
+            if i == election_object:
+                del self.elections[i]
+                break
+
+    def update_vote_status(self, election_object):
+        for i, test in self.elections:
+            if i == election_object:
+                # change from true to false
+                if test:
+                    self.elections[i] = False
+                # change from false to true
+                else:
+                    self.elections[i] = True
