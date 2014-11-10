@@ -6,15 +6,21 @@
 {% csrf_token %}
 
 {% for race in election.race_set.all %}
-	<hr>
-	<label for="race{{ forloop.counter }}">{{ race.race_name }}</label>
-	<div><p>{{ race.race_description }}</p>
+	<fieldset class = "radiogroup">
 	
+	<legend><label for="race{{ forloop.counter }}">{{ race.race_name }}</label></legend>
+	<div><p>{{ race.race_description }}</p>
+	<ul>
 	{% for candidate in race.candidate_set.all %} 
-    <input type="radio" name="candidate" id="candidate{{ forloop.counter }}" 
+    <li><input type="radio" name={{race.race_name}} id="candidate{{ forloop.counter }}" 
 				value="{{ candidate.id }}" />
     <label for="candidate{{ forloop.counter }}">{{ candidate.candidate_name }}</label><br />
+	</li>
 	{% endfor %}
+	</ul>
+	</fieldset>
+	
+	
 
 {% endfor %}
 <input type="submit" value="Vote" />
