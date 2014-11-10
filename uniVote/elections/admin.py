@@ -9,7 +9,6 @@ class CandidateInLine(admin.TabularInline):
     model = Candidate
     extra = 3
 
-
 class VoterInline(admin.TabularInline):
     model = Voter
     verbose_name_plural = 'Voter Approval'

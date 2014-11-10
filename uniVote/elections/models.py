@@ -4,7 +4,6 @@ from django.contrib.auth.models import User
 
 # AFTER CHANGING MODELS, issue commands makemigrations, migrate to save in db.
 
-
 # this Election class is represented in the db
 class Election(models.Model):
     def __unicode__(self):
