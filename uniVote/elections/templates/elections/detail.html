@@ -6,8 +6,9 @@
 {% csrf_token %}
 
 {% for race in election.race_set.all %}
+	<hr>
 	<label for="race{{ forloop.counter }}">{{ race.race_name }}</label>
-	<p>{{ race.race_description }}</p><br />
+	<div><p>{{ race.race_description }}</p>
 	
 	{% for candidate in race.candidate_set.all %} 
     <input type="radio" name="candidate" id="candidate{{ forloop.counter }}" 
@@ -18,4 +19,12 @@
 {% endfor %}
 <input type="submit" value="Vote" />
 </form>
-<a href="/accounts/logout">logout</a>
+<hr>
+<table>
+	<tr>
+		<td><a href="/elections/">Return to Elections</a></td>
+	</tr>
+	<tr>
+		<td><a href="/accounts/logout">Logout of System</a></td>
+	</tr>
+</table>
