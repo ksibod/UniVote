@@ -5,7 +5,6 @@ from django.views import generic
 
 from elections.models import Candidate, Election, Voter
 
-
 class IndexView(generic.ListView):
     template_name = 'elections/index.html'
     context_object_name = 'latest_election_list'

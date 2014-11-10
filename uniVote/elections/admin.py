@@ -14,7 +14,6 @@ class VoterInline(admin.TabularInline):
     model = Voter
     verbose_name_plural = 'Voter Approval'
 
-
 # This class represents the properties avaiable oat the admin panel at /admin/:
 class ElectionAdmin(admin.ModelAdmin):
     fieldsets = [
