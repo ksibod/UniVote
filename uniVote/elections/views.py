@@ -26,8 +26,8 @@ class ResultsView(generic.DetailView):
 
 # Called whenever a user makes a vote:
 ### HERE SHOULD CHECK IF request.user is authenticated BEFORE THEY CAN VOTE:
-def vote(request, election_id):
-    p = get_object_or_404(Election, pk=election_id)
+def vote(request, race_id):
+    p = get_object_or_404(Race, pk=race_id)
     try:
         selected_candidate = p.candidate_set.get(pk=request.POST['candidate'])
     except (KeyError, Candidate.DoesNotExist):

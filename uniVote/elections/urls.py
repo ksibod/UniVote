@@ -12,5 +12,5 @@ urlpatterns = patterns(
     url(r'^(?P<pk>\d+)/results/$',
         views.ResultsView.as_view(), name='results'),
     # ex: /elections/4/vote
-    url(r'^(?P<election_id>\d+)/vote/$', views.vote, name='vote'),
+    url(r'^(?P<race_id>\d+)/vote/$', views.vote, name='vote'),
     )
