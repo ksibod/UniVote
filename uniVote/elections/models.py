@@ -2,9 +2,10 @@ from django.db import models
 from django.utils import timezone as tz
 from django.contrib.auth.models import User
 
-# AFTER CHANGING MODELS, issue commands makemigrations, migrate to save in db.
+## AFTER CHANGING MODELS, issue commands makemigrations, migrate to save in db.
 
-# this Election class is represented in the db
+
+## Election class is represented in the db, it is a container for races
 class Election(models.Model):
     def __unicode__(self):
         return self.election_text
@@ -30,27 +31,31 @@ class Election(models.Model):
     in_election_window.short_description = 'In election window?'
 
 
+## Race class represented in the database, it is a container for Candidates
 class Race(models.Model):
     def __unicode__(self):
         return self.race_name 
         
+    # each race is related to an election    
     election = models.ForeignKey(Election)
     race_name = models.CharField(max_length=200, default='') 
     race_description = models.CharField(max_length=200, default='')
     race_detail = models.CharField(max_length=200, default='')
     
-# Each candiate is represented in the db
+    
+## Each candiate is represented in the db. They are specifically bound to a race.
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
-    # each candidate is related to an election
+        
+    # each Candidate is related to an race in an election
     race = models.ForeignKey(Race)
+    election = models.ForeignKey(Election)
     candidate_name = models.CharField(max_length=200)
-    votes = models.IntegerField(default=0)
 
 
-# Extending the existing User model to allow user to vote once per election:
-# https://docs.djangoproject.com/en/1.7/topics/auth/customizing/#extending-the-existing-user-model
+## Extending the existing User model to allow user to vote once per election:
+## https://docs.djangoproject.com/en/1.7/topics/auth/customizing/#extending-the-existing-user-model
 class Voter(models.Model):
     user = models.ForeignKey(User)
     # user = models.OneToOneField(User)
@@ -60,7 +65,6 @@ class Voter(models.Model):
     # This will be a dictionary that will hold each election that the voter is approved for.
     # After voting we can set that election to false, so they can no longer vote
     elections = {models.ForeignKey(Election): True}
-
     #approved = models.BooleanField(default=False)
 
     def is_approved(self, election_name):
@@ -73,7 +77,6 @@ class Voter(models.Model):
                 #if approved but already voted
                 else:
                     return False
-
         # Voter is not approved for this election
         return False
 
@@ -95,3 +98,14 @@ class Voter(models.Model):
                 # change from false to true
                 else:
                     self.elections[i] = True
+       
+                    
+## Stores votes in a table with foreign keys to respective attributes                    
+class Votes(models.Model):
+    def __unicode__(self):
+        return self.votes_id
+        
+    # Votes are stored by votes cast for cand by voter in race
+    race_voted_in = models.ForeignKey(Race)
+    voter_who_voted = models.ForeignKey(Voter) 
+    candidate_voted_for = models.ForeignKey(Candidate)
