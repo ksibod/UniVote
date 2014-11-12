@@ -1,6 +1,9 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.views import generic
+from django.contrib.auth.decorators import login_required
+from django.views.generic import UpdateView
+from django.utils.decorators import method_decorator
 from elections.models import *
 
 
@@ -36,7 +39,24 @@ class VoteFormView(generic.DetailView):
 class ResultsView(generic.DetailView):
     model = Election
     template_name = 'elections/results.html'
+    
+    
+## http://stackoverflow.com/questions/9046533/creating-user-profile-pages-in-django   
+class ProfileView(generic.DetailView):
+    model = Profile
+    template_name = 'elections/profile.html'
+    
+    def profile_exists(self):
+        pass
 
+    def get_object(self):
+        """Return's the current users profile."""
+        try:
+            return self.request.user.get_profile()
+        except Profile.DoesNotExist:
+            raise NotImplemented(
+                "What if the user doesn't have an associated profile?")  
+    
 
 def vote(request, election_id):
     """
@@ -63,14 +83,19 @@ def vote(request, election_id):
 
         except (KeyError, Candidate.DoesNotExist):
             # Redisplay the election voting form:
+<<<<<<< HEAD
             return render(
                 request,
                 'elections/detail.html',
+=======
+            return render(request, 'elections/voteform.html',
+>>>>>>> Candidate-Profile-Stuff
                 {
                     'election': election,
                     'error_message': 'You didn\'t select a candidate.',
                 })
         else:
+<<<<<<< HEAD
             # Check for previous vote should go here,
             # replacing vote if already voted, if not newvote
 
@@ -88,3 +113,24 @@ def vote(request, election_id):
             #return HttpResponseRedirect()
             # reverse('elections:results', args=(election.id,)))
             return HttpResponse("Done")
+=======
+            # Check for previous vote should go here, replacing vote if already voted, if not newvote
+            vote_check = Votes.objects.filter(race_voted_in = race_object, voter_who_voted = user_object)
+            if vote_check:
+                return render(request, 'elections/voteform.html',
+                    {
+                    'election': election, 
+                    'error_message': 'You already voted in this race.',
+                    })
+            else:
+                # Create a new databse entry with the objects created above. Save the entry.
+                new_vote = Votes(race_voted_in=race_object, voter_who_voted=user_object, candidate_voted_for=candidate_object)
+                new_vote.save()
+
+                # Send user to a page reporting success of vote
+                """ Always return an HttpResponseRedirect after successfully dealing
+                    with POST data. This prevents data from being posted twice if a
+                    user hits the Back button. """
+                #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
+                return HttpResponse("Done")
+>>>>>>> Candidate-Profile-Stuff

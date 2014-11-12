@@ -40,11 +40,18 @@ class Race(models.Model):
     election = models.ForeignKey(Election)
     race_name = models.CharField(max_length=200, default='')
     race_description = models.CharField(max_length=200, default='')
+<<<<<<< HEAD
     race_detail = models.CharField(max_length=200, default='')
 
 
 # Each candiate is represented in the db.
 # They are specifically bound to a race.
+=======
+    race_detail = models.CharField(max_length=1000, default='')
+    
+    
+## Each candiate is represented in the db. They are specifically bound to a race.
+>>>>>>> Candidate-Profile-Stuff
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
@@ -100,9 +107,26 @@ class Voter(models.Model):
                 # change from false to true
                 else:
                     self.elections[i] = True
+<<<<<<< HEAD
 
 
 ## Stores votes in a table with foreign keys to respective attributes
+=======
+       
+## Hold data used in a candidate profile page.
+class Profile(models.Model):
+    def __unicode__(self):
+        return self.profile_id
+        
+    # Information stored in profile page
+    name = models.CharField(max_length=100, default='')
+    major =  models.CharField(max_length=100, default='')
+    interests = models.CharField(max_length=200, default='')
+    experience = models.CharField(max_length=200, default='')
+    
+                    
+## Stores votes in a table with foreign keys to respective attributes                    
+>>>>>>> Candidate-Profile-Stuff
 class Votes(models.Model):
     def __unicode__(self):
         return self.votes_id

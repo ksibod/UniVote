@@ -1,31 +1,20 @@
 <h1>{{ election.election_text }} Elections</h1>
 
-{% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
-
-<!-- Start form - from and sent to corresponding /'election_id'/vote  page -->
-<form action="{% url 'elections:vote' election.id %}" method="post">
-{% csrf_token %}
-
+<h3>Races listed:</h3>
 <!-- Cycle through all races assigned to an election -->
 {% for race in election.race_set.all %}
-	<fieldset class = "radiogroup">
-	<input type="hidden" name="race_id[]" value="{{race.id}}">
-	<legend><label for="race{{ forloop.counter }}">{{ race.race_name }}</label></legend>
-	<p>{{ race.race_description }}</p>
-		
-	<!-- Cycle through all the candidates in the given race -->	
-	{% for candidate in race.candidate_set.all %} 	
-    <input type="radio" name="candidate_race_{{race.id}}" value="{{ candidate.id }}" />
-    <label for="race_{{race.id}}">{{ candidate.candidate_name }}</label>
-	<a href="profiles/{{ candidate.id }}/">LINK TO PROFILE GOES HERE WHEN FIXED</a><br />
-	{% endfor %} <!-- End candidate cycle -->
-	</fieldset>
-	<br>
-{% endfor %} <!-- End race cycle -->
-
-<!-- Form submit -->
-<input type="submit" value="Vote" />
-</form>
+	<h4>{{ race.race_name }}</h4>
+	<h6>{{ race.race_description }}</h4>
+	<p>{{ race.race_detail }}</p>
+	<h7>List of candidates</h7>
+	<ul>
+		{% for candidate in race.candidate_set.all %}
+		<li>{{ candidate.candidate_name }}
+			<a href="profiles/{{ candidate.id }}/"> profile</a></li>
+		{% endfor %} <!-- End candidate cycle -->
+</ul><br>
+{% endfor %}<!-- End race cycle -->
+<br>
 
 <!-- Lower links of the voting form -->
 <hr>

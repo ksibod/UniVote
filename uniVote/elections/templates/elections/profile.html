@@ -1,0 +1,15 @@
+<link rel="stylesheet" href="{{ STATIC_URL }}homepage.css" />
+<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
+
+<a id="logoutButton" href="/accounts/logout">Logout</a>
+
+{% if request.user.is_staff %}
+    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
+    <a id="adminButton" href="/admin/">Administration Panel</a>
+{% endif %}
+
+<img id="uniLogo" src="/static/images/uniVote.png" />
+
+<h1>Candidate Profile</h1>
+

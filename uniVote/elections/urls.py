@@ -15,6 +15,13 @@ urlpatterns = patterns(
         views.ResultsView.as_view(), name='results'),
     # EX: /elections/4/vote
     url(r'^(?P<election_id>\d+)/vote/$', views.vote, name='vote'),
+<<<<<<< HEAD
     # EX: /elections/4/voteform
     url(r'^(?P<election_id>\d+)/voteform/$', views.vote, name='vote'),
+=======
+    # ex: /elections/4/voteform
+    url(r'^(?P<pk>\d+)/voteform/$', views.VoteFormView.as_view(), name='voteform'),
+    # ex: /profiles/32
+    url(r'^(?P<pk>\d+)/$', views.ProfileView.as_view(), name='profile'),
+>>>>>>> Candidate-Profile-Stuff
     )
