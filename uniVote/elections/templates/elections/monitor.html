@@ -1,0 +1,20 @@
+<h1>Election Monitoring</h1>
+
+{% if latest_election_results %}
+
+<ul>
+{% for election in latest_election_results%}
+    <li>{{ election.election_text }}</li>
+    <ul>
+    {% for candidate in election.candidate_set.all %}
+    <li>{{ candidate.candidate_name }} -- {{ candidate.votes }} vote {{ candidate.votes|pluralize }}</li>
+    {% endfor %}
+    </ul>
+{% endfor %}
+</ul>
+
+{% else %}
+    <p>No polls are available to monitor.</p>
+{% endif %}
+
+<a href="/accounts/logout">logout</a>

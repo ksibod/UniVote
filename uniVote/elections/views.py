@@ -15,6 +15,16 @@ class IndexView(generic.ListView):
         return Election.objects.order_by('-start_date')[:5]
 
 
+class MonitorView(generic.DetailView):
+    template_name = 'elections/monitor.html'
+    context_object_name = 'latest_election_results'
+
+    def get_queryset(self):
+        """Return all the active elections."""
+        return [e for e in Election.objects.all()
+                if e.in_election_window() is True]
+
+
 class DetailView(generic.DetailView):
     model = Election
     template_name = 'elections/detail.html'
@@ -23,8 +33,8 @@ class DetailView(generic.DetailView):
 class VoteFormView(generic.DetailView):
     model = Election
     template_name = 'elections/voteform.html'
-    
-    
+
+
 class ResultsView(generic.DetailView):
     model = Election
     template_name = 'elections/results.html'
@@ -39,7 +49,7 @@ def vote(request, election_id):
     election = get_object_or_404(Election, pk=election_id)
     # Gets a list of races that match the election id
     races = Race.objects.filter(election_id=election_id)
-    
+
     # Cycle through the dynamic list of races and processes the Post data
     for race in races:
         try:
@@ -57,7 +67,7 @@ def vote(request, election_id):
                 })
         else:
             # Check for previous vote should go here, replacing vote if already voted, if not newvote
-            
+
             # Create a new databse entry with the objects created above. Save the entry.
             new_vote = Votes(race_voted_in=race_object, voter_who_voted=user_object, candidate_voted_for=candidate_object)
             new_vote.save()
