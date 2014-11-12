@@ -11,6 +11,7 @@
 
 <img id="uniLogo" src="/static/images/uniVote.png" />
 
+<!-- If elections are created -->
 {% if latest_election_list %}
 
     <h3>Elections</h3>
@@ -20,28 +21,38 @@
 			<th>Start Time</th>
 			<th>End Time</th>
 		</tr>
-		
+
+	<!-- Cycles through all the elections created -->	
     {% for election in latest_election_list %}
-        <tr class="electionList" style="color:blue" onclick="location.href='{% url 'elections:detail' election.id %}'">
+	
+		<!-- The table row view when the election is open goes to voting page -->
+		{% if election.is_in_election_window %}
+        <tr class="electionList" style="color:blue" 
+				onclick="location.href='{% url 'elections:detail' election.id %}'">
 			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
-			
-			
-		{% if election.is_closed %}
+			<td id="td02">Open</td>
+			<td id="td03">{{ election.end_date }}</td>
+		
+		<!-- The table row view when the election is over. Goes to a results page -->	
+		{% elif election.is_closed %}
+        <tr class="electionList" style="color:blue" 
+				onclick="location.href='{% url 'elections:detail' election.id %}'">
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
 			<td id="td02">Closed</td>
 			<td id="td03">Closed</td>
 
-		{% elif election.is_in_election_window %}
-			<td id="td02">Open</td>
-			<td id="td03">{{ election.end_date }}</td>
-
+		<!-- The table row displayed before the election opens. Goes to the details page -->
 		{% else %}
+        <tr class="electionList" style="color:blue" 
+				onclick="location.href='{% url 'elections:detail' election.id %}'">
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
 			<td id="td02">{{ election.start_date }}</td>
 			<td id="td03">{{ election.end_date }}</td>
 		{% endif %}
-		</tr>
-		
+		</tr>	
     {% endfor %}
 
+<!-- Displays when no elections are available -->
 {% else %}
     <p id="noElects">No polls are available.</p>
 {% endif %}
