@@ -5,11 +5,12 @@ from django.contrib import admin
 urlpatterns = patterns(
     '',
     # Examples:
-    # Test EX: root url www.mysite.com/
-    #url(r'^$', include('accounts.urls')),
+    # EX: /
     url(r'', include('accounts.urls')),
+    # EX: /elections/
     url(r'^elections/', include('elections.urls', namespace='elections')),
+    # EX: /admin/
     url(r'^admin/', include(admin.site.urls)),
-    # ex: accounts/...
+    # EX: /accounts/...
     url(r'^accounts/', include('accounts.urls')),
 )
