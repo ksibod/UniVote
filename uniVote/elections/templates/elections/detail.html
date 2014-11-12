@@ -10,7 +10,7 @@
 	<ul>
 		{% for candidate in race.candidate_set.all %}
 		<li>{{ candidate.candidate_name }}
-			<a href="profiles/{{ candidate.id }}/"> profile</a></li>
+			<a href="/elections/profile/{{ candidate.id }}/"> profile</a></li>
 		{% endfor %} <!-- End candidate cycle -->
 </ul><br>
 {% endfor %}<!-- End race cycle -->

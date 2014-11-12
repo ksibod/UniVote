@@ -83,37 +83,12 @@ def vote(request, election_id):
 
         except (KeyError, Candidate.DoesNotExist):
             # Redisplay the election voting form:
-<<<<<<< HEAD
-            return render(
-                request,
-                'elections/detail.html',
-=======
             return render(request, 'elections/voteform.html',
->>>>>>> Candidate-Profile-Stuff
                 {
                     'election': election,
                     'error_message': 'You didn\'t select a candidate.',
                 })
         else:
-<<<<<<< HEAD
-            # Check for previous vote should go here,
-            # replacing vote if already voted, if not newvote
-
-            # Create a new databse entry with the objects created above.
-            # Save the entry.
-            new_vote = Votes(race_voted_in=race_object,
-                             voter_who_voted=user_object,
-                             candidate_voted_for=candidate_object)
-            new_vote.save()
-
-            # Send user to a page reporting success of vote
-            # Always return an HttpResponseRedirect after successfully dealing
-            # with POST data. This prevents data from being posted twice if a
-            # user hits the Back button. """
-            #return HttpResponseRedirect()
-            # reverse('elections:results', args=(election.id,)))
-            return HttpResponse("Done")
-=======
             # Check for previous vote should go here, replacing vote if already voted, if not newvote
             vote_check = Votes.objects.filter(race_voted_in = race_object, voter_who_voted = user_object)
             if vote_check:
@@ -133,4 +108,3 @@ def vote(request, election_id):
                     user hits the Back button. """
                 #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
                 return HttpResponse("Done")
->>>>>>> Candidate-Profile-Stuff

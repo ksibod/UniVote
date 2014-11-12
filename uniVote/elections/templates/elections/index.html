@@ -29,17 +29,10 @@
     {% for election in latest_election_list %}
 
 		<!-- The table row view when the election is open goes to voting page -->
-<<<<<<< HEAD
-		{% if election.is_in_election_window %}
-        <tr class="electionList" style="color:blue"
-				onclick="location.href='{% url 'elections:detail' election.id %}'">
-			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
-=======
 		{% if election.in_election_window %}
         <tr class="electionList" style="color:blue" 
 				onclick="location.href='{% url 'elections:voteform' election.id %}'">
 			<td><a style="color: blue" class="electionList" href="{% url 'elections:voteform' 					election.id %}">{{ election.election_text }}</a></td>
->>>>>>> Candidate-Profile-Stuff
 			<td id="td02">Open</td>
 			<td id="td03">{{ election.end_date }}</td>
 
