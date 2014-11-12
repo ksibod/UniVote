@@ -1,7 +1,5 @@
 from django.shortcuts import get_object_or_404, render
-from django.http import HttpResponseRedirect
 from django.http import HttpResponse
-from django.core.urlresolvers import reverse
 from django.views import generic
 from elections.models import *
 
@@ -40,11 +38,15 @@ class ResultsView(generic.DetailView):
     template_name = 'elections/results.html'
 
 
-""" Vote function called from an open election html. When a user casts a vote the function
-    performs checks to ensure vote is unique by cross referencing the database. The form from
-    the referring web page passes POST into this function. The data is extracted and processed.
-    Assistance from David Adamo Jr. in writing this vote function and using the form POST queries. """
 def vote(request, election_id):
+    """
+    Vote function called from an open election html. When a user casts a vote
+    the function performs checks to ensure vote is unique by cross referencing
+    the database. The form from the referring web page passes POST into this
+    function. The data is extracted and processed.Assistance from David Adamo
+    Jr. in writing this vote function and using the form POST queries.
+    """
+
     # Gets election object
     election = get_object_or_404(Election, pk=election_id)
     # Gets a list of races that match the election id
@@ -56,25 +58,33 @@ def vote(request, election_id):
             # Instance objects need to be made to pass into the database
             race_object = get_object_or_404(Race, pk=race.id)
             user_object = get_object_or_404(Voter, pk=request.user.id)
-            candidate_object = get_object_or_404(Candidate, pk=request.POST['candidate_race_' + str(race.id)])
+            candidate_object = get_object_or_404(
+                Candidate, pk=request.POST['candidate_race_' + str(race.id)])
 
         except (KeyError, Candidate.DoesNotExist):
             # Redisplay the election voting form:
-            return render(request, 'elections/detail.html',
+            return render(
+                request,
+                'elections/detail.html',
                 {
-                'election': election,
-                'error_message': 'You didn\'t select a candidate.',
+                    'election': election,
+                    'error_message': 'You didn\'t select a candidate.',
                 })
         else:
-            # Check for previous vote should go here, replacing vote if already voted, if not newvote
+            # Check for previous vote should go here,
+            # replacing vote if already voted, if not newvote
 
-            # Create a new databse entry with the objects created above. Save the entry.
-            new_vote = Votes(race_voted_in=race_object, voter_who_voted=user_object, candidate_voted_for=candidate_object)
+            # Create a new databse entry with the objects created above.
+            # Save the entry.
+            new_vote = Votes(race_voted_in=race_object,
+                             voter_who_voted=user_object,
+                             candidate_voted_for=candidate_object)
             new_vote.save()
 
             # Send user to a page reporting success of vote
-            """ Always return an HttpResponseRedirect after successfully dealing
-                with POST data. This prevents data from being posted twice if a
-                user hits the Back button. """
-            #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
+            # Always return an HttpResponseRedirect after successfully dealing
+            # with POST data. This prevents data from being posted twice if a
+            # user hits the Back button. """
+            #return HttpResponseRedirect()
+            # reverse('elections:results', args=(election.id,)))
             return HttpResponse("Done")

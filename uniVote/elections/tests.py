@@ -6,8 +6,6 @@ from django.test.client import Client
 from django.contrib.auth.models import User
 
 from models import Election
-from models import Voter
-
 
 
 # Create your tests here.
@@ -52,6 +50,9 @@ class ElectionMethodTests(TestCase):
         self.email = 'test@test.com'
         self.password = 'test'
 
-        self.test_user = User.objects.create_user(self.username, self.email, self.password)
-        login = self.client.login(username=self.username, password=self.password)
+        self.test_user = User.objects.create_user(self.username,
+                                                  self.email,
+                                                  self.password)
+        login = self.client.login(username=self.username,
+                                  password=self.password)
         self.assertEqual(login, True)

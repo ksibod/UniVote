@@ -15,7 +15,7 @@ class Election(models.Model):
             return True
         else:
             return False
-            
+
     def is_closed(self):
         if tz.now() > self.end_date:
             return True
@@ -34,36 +34,38 @@ class Election(models.Model):
 ## Race class represented in the database, it is a container for Candidates
 class Race(models.Model):
     def __unicode__(self):
-        return self.race_name 
-        
-    # each race is related to an election    
+        return self.race_name
+
+    # each race is related to an election
     election = models.ForeignKey(Election)
-    race_name = models.CharField(max_length=200, default='') 
+    race_name = models.CharField(max_length=200, default='')
     race_description = models.CharField(max_length=200, default='')
     race_detail = models.CharField(max_length=200, default='')
-    
-    
-## Each candiate is represented in the db. They are specifically bound to a race.
+
+
+# Each candiate is represented in the db.
+# They are specifically bound to a race.
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
-        
+
     # each Candidate is related to an race in an election
     race = models.ForeignKey(Race)
     election = models.ForeignKey(Election)
     candidate_name = models.CharField(max_length=200)
 
 
-## Extending the existing User model to allow user to vote once per election:
-## https://docs.djangoproject.com/en/1.7/topics/auth/customizing/#extending-the-existing-user-model
+# Extending the existing User model to allow user to vote once per election:
+# https://docs.djangoproject.com
+# /en/1.7/topics/auth/customizing/#extending-the-existing-user-model
 class Voter(models.Model):
     user = models.ForeignKey(User)
     # user = models.OneToOneField(User)
     election = models.ForeignKey(Election)
 
     # Hold election information for each user
-    # This will be a dictionary that will hold each election that the voter is approved for.
-    # After voting we can set that election to false, so they can no longer vote
+    # This is a dict that holds each election that the voter is approved for.
+    # After voting, set that election to false, so they can no longer vote.
     elections = {models.ForeignKey(Election): True}
     #approved = models.BooleanField(default=False)
 
@@ -98,14 +100,14 @@ class Voter(models.Model):
                 # change from false to true
                 else:
                     self.elections[i] = True
-       
-                    
-## Stores votes in a table with foreign keys to respective attributes                    
+
+
+## Stores votes in a table with foreign keys to respective attributes
 class Votes(models.Model):
     def __unicode__(self):
         return self.votes_id
-        
+
     # Votes are stored by votes cast for cand by voter in race
     race_voted_in = models.ForeignKey(Race)
-    voter_who_voted = models.ForeignKey(Voter) 
+    voter_who_voted = models.ForeignKey(Voter)
     candidate_voted_for = models.ForeignKey(Candidate)
