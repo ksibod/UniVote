@@ -11,6 +11,6 @@ urlpatterns = patterns(
     url(r'^elections/', include('elections.urls', namespace='elections')),
     # EX: /admin/
     url(r'^admin/', include(admin.site.urls)),
-    # EX: /accounts/...
+    # EX: accounts/...
     url(r'^accounts/', include('accounts.urls')),
 )
