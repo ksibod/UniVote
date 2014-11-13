@@ -4,7 +4,7 @@ from django.views import generic
 from django.contrib.auth.decorators import login_required
 from django.views.generic import UpdateView
 from django.utils.decorators import method_decorator
-from elections.models import *
+from models import *
 
 
 class IndexView(generic.ListView):

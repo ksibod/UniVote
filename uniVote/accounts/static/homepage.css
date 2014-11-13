@@ -35,6 +35,20 @@ body
 }
 
 
+#monitorButton
+{
+    text-decoration: none;
+    color: white;
+    float: right;
+    margin-right: 1em;
+    margin-top: 2em;
+}
+
+#monitorButton:hover
+{
+    color: #2c3e50;
+}
+
 
 
 #uniLogo
