@@ -21,6 +21,7 @@
 	<table id="t01">
 		<tr>
 			<th style="text-align: left">Election Name</th>
+			<th></th>
 			<th>Start Time</th>
 			<th>End Time</th>
 		</tr>
@@ -32,7 +33,13 @@
 		{% if election.in_election_window %}
         <tr class="electionList" style="color:blue" 
 				onclick="location.href='{% url 'elections:voteform' election.id %}'">
-			<td><a style="color: blue" class="electionList" href="{% url 'elections:voteform' 					election.id %}">{{ election.election_text }}</a></td>
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:voteform' 					election.id %}">{{ election.election_text }}</a>
+			<!-- Offer link to results if user is an admin -->
+			{% if request.user.is_staff %}
+			<td><a href="{% url 'elections:results' election.id %}">Results</a></td>
+			{% else %}
+			<td></td>
+			{% endif %}
 			<td id="td02">Open</td>
 			<td id="td03">{{ election.end_date }}</td>
 
@@ -40,7 +47,14 @@
 		{% elif election.is_closed %}
         <tr class="electionList" style="color:blue"
 				onclick="location.href='{% url 'elections:detail' election.id %}'">
-			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a>
+			<!-- Offer link to results if user is an admin -->
+			{% if request.user.is_staff %}
+			&nbsp&nbsp&nbsp&nbsp&nbsp
+			<td><a href="{% url 'elections:results' election.id %}">Results</a></td>
+			{% else %}
+			<td></td>
+			{% endif %}
 			<td id="td02">Closed</td>
 			<td id="td03">Closed</td>
 
@@ -48,7 +62,13 @@
 		{% else %}
         <tr class="electionList" style="color:blue"
 				onclick="location.href='{% url 'elections:detail' election.id %}'">
-			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a></td>
+			<td><a style="color: blue" class="electionList" href="{% url 'elections:detail' 					election.id %}">{{ election.election_text }}</a>
+			<!-- Offer link to results if user is an admin -->
+			{% if request.user.is_staff %}
+			<td><a href="{% url 'elections:results' election.id %}">Results</a></td>
+			{% else %}
+			<td></td>
+			{% endif %}
 			<td id="td02">{{ election.start_date }}</td>
 			<td id="td03">{{ election.end_date }}</td>
 		{% endif %}

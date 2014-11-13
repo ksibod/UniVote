@@ -1,9 +1,32 @@
 <h1>{{ election.election_text }}</h1>
 
-<ul>
-{% for candidate in election.candidate_set.all %}
-    <li>{{ candidate.candidate_name }} -- {{ candidate.votes }} vote{{ candidate.votes|pluralize }}</li>
-{% endfor %}
-</ul>
-<a href="/accounts/logout">logout</a>
-<a href="{% url 'elections:detail' election.id %}">Vote again?</a>
+<!-- Show a list of results in a table for admins or monitors only FOR NOW -->
+<table><th> Total Number of Votes Cast: ????</th>
+	<tr>
+		 <!-- Each race will be show in a small table -->
+			{% for race in election.race_set.all %}
+			<table>
+				<th>{{ race.race_name }}</th>
+				<th>Total Votes: {{ race.id.count }}</th>
+				{% for candidate in race.candidate_set.all %}
+					<tr>
+						<td>{{ candidate.candidate_name }}</td>
+						<td>{{ results.num_votes }}</td></tr>
+				{% endfor %}
+				
+			</table></tr>
+			{% endfor %}
+
+</table>
+
+
+<!-- Lower links of the results page -->
+<hr>
+<table>
+	<tr>
+		<td><a href="/elections/">Return to Elections</a></td>
+	</tr>
+	<tr>
+		<td><a href="/accounts/logout">Logout of System</a></td>
+	</tr>
+</table>

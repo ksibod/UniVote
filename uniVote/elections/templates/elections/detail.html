@@ -2,17 +2,34 @@
 
 <h3>Races listed:</h3>
 <!-- Cycle through all races assigned to an election -->
+
+<!-- Check here to see if user is registered, if not have a registration button available -->
+
+
+<!-- Start loop through races in this election and list race details -->
 {% for race in election.race_set.all %}
+
 	<h4>{{ race.race_name }}</h4>
 	<h6>{{ race.race_description }}</h4>
 	<p>{{ race.race_detail }}</p>
 	<h7>List of candidates</h7>
 	<ul>
+
+		<!-- Cycle through the candidates entered in this race, and post their details -->
 		{% for candidate in race.candidate_set.all %}
 		<li>{{ candidate.candidate_name }}
 			<a href="/elections/profile/{{ candidate.id }}/"> profile</a></li>
 		{% endfor %} <!-- End candidate cycle -->
-</ul><br>
+		</ul><br>
+		<!-- Check to see if user is entered as a candidate in this race, if not then give add button -->
+		{% if race.is_candidate %}
+			<p>You are entered in this race.</p>
+		{% else %}
+			<p>You are not entered ADD BUTTON HERE %}
+		{% endif %}
+		
+		
+		
 {% endfor %}<!-- End race cycle -->
 <br>
 

@@ -54,6 +54,12 @@ class Race(models.Model):
     race_description = models.CharField(max_length=200, default='')
     race_detail = models.CharField(max_length=1000, default='')
     
+    def is_candidate(self):
+        pass
+        #cand_check = Candidate.objects.filter(candidate_id = request.user.id)
+        
+        
+    
     
 ## Each candiate is represented in the db. They are specifically bound to a race.
 class Candidate(models.Model):
@@ -67,7 +73,7 @@ class Candidate(models.Model):
     profile_id = 0
     
     def has_profile(self):
-        if profile_id == 0:
+        if self.profile_id == 0:
             return False
             
         else:
@@ -85,7 +91,7 @@ class Voter(models.Model):
     # Hold election information for each user
     # This is a dict that holds each election that the voter is approved for.
     # After voting, set that election to false, so they can no longer vote.
-    elections = {models.ForeignKey(Election): True}
+    #elections = {models.ForeignKey(Election): True}
     #approved = models.BooleanField(default=False)
 
     def is_approved(self, election_name):
@@ -130,3 +136,4 @@ class Votes(models.Model):
     race_voted_in = models.ForeignKey(Race)
     voter_who_voted = models.ForeignKey(Voter)
     candidate_voted_for = models.ForeignKey(Candidate)
+    
