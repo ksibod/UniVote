@@ -1,5 +1,33 @@
 $(document).ready(function() {
 	dothefunc();
+
+
+	// Intercept the submission of the login form
+    $("form #loginForm").submit(function(request)
+    {
+        console.log("form stuff!");
+
+        request.preventDefault();
+        var logForm = $(request.target);
+        $.ajax({
+            url: user_login.attr('action'),
+            type: user_login.attr('method'),
+            data: user_login.serialize(),
+            dataType: 'json',
+            success: function(json){
+                // code to update DOM here
+
+            },
+            error: function(xhr, ajaxOptions, thrownError){
+                // log ajax errors?
+                invalidCredentials();
+            }
+        });
+
+        console.log("done!");
+    });
+
+
 });
 
 function dothefunc()
@@ -13,13 +41,14 @@ function dothefunc()
 // Function to show incorrect credentials popup on login page
 function invalidCredentials()
 {
-    console.log("INVALID!");
-    setTimeout(function() {
-        swal({   title: "Oops...",
-                 text: "Your username or password is invalid. Please try again.",
-                 type: "error"});
-    }, 500);
-    console.log("showing the popup");
+
+        console.log("INVALID!");
+        setTimeout(function() {
+            swal({   title: "Oops...",
+                     text: "Your username or password is invalid. Please try again.",
+                     type: "error"});
+        }, 500);
+        console.log("showing the popup");
 }
 
 
@@ -29,6 +58,10 @@ function createAccount()
     $("#modal").fadeIn("slow");
     $("#createUser").fadeIn("slow");
 }
+
+
+
+
 
 
 

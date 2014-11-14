@@ -19,12 +19,12 @@
 
 {% block content %}
 {% if form.errors %}
-        <script>invalidCredentials();</script>
+      <!--  <script>invalidCredentials();</script>  -->
 {% endif %}
 
 <img id="uniLogo" src="/static/images/uniVote.png" />
 
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+<form id="loginForm" method="post"> <!-- action="{% url 'django.contrib.auth.views.login' %}">  -->
 {% csrf_token %}
 
 <div id="login">

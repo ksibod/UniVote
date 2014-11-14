@@ -35,7 +35,7 @@ def user_login(request):
                 return HttpResponse("Wrong username/password")
     else:
         return HttpResponseRedirect("/elections")
-    return HttpResponseRedirect("/")
+    #return HttpResponseRedirect("/")
 
 
 # User Logout View
