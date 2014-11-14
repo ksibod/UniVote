@@ -24,7 +24,7 @@
 
 <img id="uniLogo" src="/static/images/uniVote.png" />
 
-<form id="loginForm" method="post"> <!-- action="{% url 'django.contrib.auth.views.login' %}">  -->
+<form id="loginForm" method="POST" action="{% url 'django.contrib.auth.views.login' %}">
 {% csrf_token %}
 
 <div id="login">

@@ -7,6 +7,10 @@ from django.core.context_processors import csrf
 #Import a user registration form
 from forms import UserRegisterForm
 
+#import json stuff
+import json
+
+
 # User authentication in Django
 # https://docs.djangoproject.com/en/dev/topics/auth/
 
@@ -16,9 +20,11 @@ def user_login(request):
     if request.user.is_anonymous():
         if request.method == 'POST':
             # NEED A FORM FOR USER TO LOGIN:
+            response_data = {}
 
             username = request.POST['username']
             password = request.POST['password']
+
             #This authenticates the user
             user = authenticate(username=username, password=password)
             if user is not None:
@@ -26,16 +32,26 @@ def user_login(request):
                     # This logs him in:
                     login(request, user)
                     # redirect to elections:
-                    return HttpResponseRedirect('/elections/')
-                else:
+                    #return HttpResponseRedirect('/elections/')
+                    response_data['result'] = 'success'
+                    response_data['message'] = 'Logged In!'
+                    return HttpResponse("successseses")
+                    return HttpResponse(json.dumps(response_data), content_type="application/json")
+                #else:
                     # Return a 'disabled account' message:
-                    return HttpResponse("Not active")
+                    #return HttpResponse("Not active")
 
             else:
-                return HttpResponse("Wrong username/password")
+                #return HttpResponse("Wrong username/password")
+                response_data['result'] = 'fail'
+                response_data['message'] = 'Not valid!'
+                return HttpResponse("fail")
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
+
+
     else:
         return HttpResponseRedirect("/elections")
-    #return HttpResponseRedirect("/")
+    return HttpResponseRedirect("/")
 
 
 # User Logout View

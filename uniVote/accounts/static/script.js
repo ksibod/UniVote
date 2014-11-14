@@ -3,24 +3,30 @@ $(document).ready(function() {
 
 
 	// Intercept the submission of the login form
-    $("form #loginForm").submit(function(request)
+    $("#loginForm").submit(function(request)
     {
         console.log("form stuff!");
 
         request.preventDefault();
-        var logForm = $(request.target);
+        var logForm = $(this);
         $.ajax({
-            url: user_login.attr('action'),
-            type: user_login.attr('method'),
-            data: user_login.serialize(),
-            dataType: 'json',
-            success: function(json){
+            url: logForm.attr('action'),
+            type: logForm.attr('method'),
+            data: logForm.serialize(),
+            dataType: 'text',
+            success: function(response, status){
                 // code to update DOM here
-
+                console.log(status);
+                // get the json object
+                //var jsonObject = $.parseJSON(response);
+                //console.log(jsonObject.result);
+                if (status == "True") window.location = "elections/";
+                else invalidCredentials();
             },
-            error: function(xhr, ajaxOptions, thrownError){
-                // log ajax errors?
-                invalidCredentials();
+            error: function(response){
+                // log ajax errors?  something went wrong
+                console.log(response);
+                somethingWrong();
             }
         });
 
@@ -41,14 +47,24 @@ function dothefunc()
 // Function to show incorrect credentials popup on login page
 function invalidCredentials()
 {
+    console.log("INVALID!");
+    setTimeout(function() {
+        swal({   title: "Oops...",
+                 text: "Your username or password is invalid. Please try again.",
+                 type: "error"});
+    }, 500);
+    console.log("showing the popup");
+}
 
-        console.log("INVALID!");
-        setTimeout(function() {
-            swal({   title: "Oops...",
-                     text: "Your username or password is invalid. Please try again.",
-                     type: "error"});
-        }, 500);
-        console.log("showing the popup");
+
+// something went wrong server side
+function somethingWrong()
+{
+    setTimeout(function() {
+        swal({   title: "Oops...",
+                 text: "Something went wrong. Please try again!",
+                 type: "error"});
+    }, 500);
 }
 
 
@@ -66,7 +82,7 @@ function createAccount()
 
 
 // tooltip for forgot password (shows when the user is typing in the password or clicks on the password box)
-$("#passwordLogin").tooltip({
+/*$("#passwordLogin").tooltip({
     position: { my: "right center", at: "left-10 center" },
     show: {
         delay: 250
@@ -85,6 +101,7 @@ $("#passwordLogin").tooltip({
         );
     }
  });
+ */
 
 
 

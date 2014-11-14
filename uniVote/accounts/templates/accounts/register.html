@@ -2,7 +2,7 @@
 <script type="text/javascript" src="{{ STATIC_URL }}registerscript.js"></script>
 
 
-<form id="regForm" action="/accounts/register/" method="POST">
+<form id="regForm" action="{% url 'accounts.views.user_register' %}" method="POST">
 {% csrf_token %}
     <h2>Please enter your details . . .</h2>
 
