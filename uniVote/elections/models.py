@@ -29,20 +29,20 @@ class Election(models.Model):
     in_election_window.admin_order_field = 'start_date'
     in_election_window.boolean = True
     in_election_window.short_description = 'In election window?'
-    
+
 
 ## Hold data used in a candidate profile page.
 class Profile(models.Model):
     def __unicode__(self):
         return self.profile_id
-        
+
     # Information stored in profile page
     name = models.CharField(max_length=100, default='')
-    major =  models.CharField(max_length=100, default='')
+    major = models.CharField(max_length=100, default='')
     interests = models.CharField(max_length=200, default='')
     experience = models.CharField(max_length=200, default='')
-    
-    
+
+
 ## Race class represented in the database, it is a container for Candidates
 class Race(models.Model):
     def __unicode__(self):
@@ -53,15 +53,14 @@ class Race(models.Model):
     race_name = models.CharField(max_length=200, default='')
     race_description = models.CharField(max_length=200, default='')
     race_detail = models.CharField(max_length=1000, default='')
-    
+
     def is_candidate(self):
         pass
         #cand_check = Candidate.objects.filter(candidate_id = request.user.id)
-        
-        
-    
-    
-## Each candiate is represented in the db. They are specifically bound to a race.
+
+
+# Each candiate is represented in the db.
+# They are specifically bound to a race.
 class Candidate(models.Model):
     def __unicode__(self):
         return self.candidate_name
@@ -71,11 +70,11 @@ class Candidate(models.Model):
     election = models.ForeignKey(Election)
     candidate_name = models.CharField(max_length=200)
     profile_id = 0
-    
+
     def has_profile(self):
         if self.profile_id == 0:
             return False
-            
+
         else:
             return True
 
@@ -125,15 +124,12 @@ class Voter(models.Model):
                 # change from false to true
                 else:
                     self.elections[i] = True
-    
-                    
-## Stores votes in a table with foreign keys to respective attributes                    
+
+
+## Stores votes in a table with foreign keys to respective attributes
 class Votes(models.Model):
-    def __unicode__(self):
-        return self.votes_id
 
     # Votes are stored by votes cast for cand by voter in race
     race_voted_in = models.ForeignKey(Race)
     voter_who_voted = models.ForeignKey(Voter)
     candidate_voted_for = models.ForeignKey(Candidate)
-    

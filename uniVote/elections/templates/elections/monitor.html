@@ -1,20 +1,16 @@
 <h1>Election Monitoring</h1>
 
-{% if latest_election_results %}
-
-<ul>
-{% for election in latest_election_results%}
-    <li>{{ election.election_text }}</li>
-    <ul>
-    {% for candidate in election.candidate_set.all %}
-    <li>{{ candidate.candidate_name }} -- {{ candidate.votes }} vote {{ candidate.votes|pluralize }}</li>
+{% for race, candidates in races.items %}
+    <h3>{{ race }}</h3>
+    {% for candidate in candidates %}
+        {% for cand, num_votes in votes.items %}
+            <p>{{ candidate }}
+            {% ifequal cand.candidate_name candidate %}
+             - {{ num_votes }}
+            {% endifequal %}
+            </p>
+        {% endfor %}
     {% endfor %}
-    </ul>
 {% endfor %}
-</ul>
 
-{% else %}
-    <p>No polls are available to monitor.</p>
-{% endif %}
-
-<a href="/accounts/logout">logout</a>
+<a href="/elections/">Return to Elections</a>

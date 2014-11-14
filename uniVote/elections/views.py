@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, render
 from django.http import HttpResponse
 from django.views import generic
+
 from models import *
 
 
@@ -13,16 +14,6 @@ class IndexView(generic.ListView):
         return Election.objects.order_by('-start_date')[:5]
 
 
-class MonitorView(generic.ListView):
-    template_name = 'elections/monitor.html'
-    context_object_name = 'latest_election_results'
-
-    def get_queryset(self):
-        """Return all the active elections."""
-        return [e for e in Election.objects.all()
-                if e.in_election_window() is True]
-
-
 class DetailView(generic.DetailView):
     model = Election
     template_name = 'elections/detail.html'
@@ -33,9 +24,40 @@ class VoteFormView(generic.DetailView):
     template_name = 'elections/voteform.html'
 
 
-class ResultsView(generic.DetailView):
+class MonitorView(generic.ListView):
     model = Election
-    template_name = 'elections/results.html'
+    template_name = 'elections/monitor.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(MonitorView, self).get_context_data(**kwargs)
+
+        # Get dict of candidate and their votes:
+        # {'candidate1': XX, 'candidate2': XX}
+        vote_totals = {}
+        for vote in Votes.objects.all():
+            if vote.candidate_voted_for not in vote_totals.keys():
+                # add candidate and their first vote to the dict:
+                vote_totals[vote.candidate_voted_for] = 1
+            else:
+                # increment candidates vote count by 1:
+                vote_totals[vote.candidate_voted_for] += 1
+
+        # Get dict of races and their candidates:
+        # {'race': ['cand1', 'cand2', 'cand3']}
+        race_and_candidates = {}
+        for candidate in Candidate.objects.all():
+            if candidate.race in race_and_candidates.keys():
+                # add race and its first candidate
+                race_and_candidates[candidate.race].append(
+                    candidate.candidate_name)
+            else:
+                # create new array in this slot:
+                race_and_candidates[candidate.race] = [
+                    candidate.candidate_name]
+
+        context['votes'] = vote_totals
+        context['races'] = race_and_candidates
+        return context
 
 
 # stackoverflow.com/questions/9046533/creating-user-profile-pages-in-django
@@ -88,10 +110,12 @@ def vote(request, election_id):
                     'error_message': 'You didn\'t select a candidate.',
                 })
         else:
-            # Check for previous vote should go here, replacing vote
-            # if already voted, if not newvote.
+            # Check for previous vote should go here,
+            # replacing vote if already voted, if not newvote
             vote_check = Votes.objects.filter(
-                race_voted_in=race_object, voter_who_voted=user_object)
+                race_voted_in=race_object,
+                voter_who_voted=user_object)
+
             if vote_check:
                 return render(
                     request,
@@ -109,7 +133,9 @@ def vote(request, election_id):
                 new_vote.save()
 
                 # Send user to a page reporting success of vote
-                # Always return an HttpResponseRedirect after successfully
-                # dealing with POST data. This prevents data from being posted
-                # twice if a user hits the Back button.
+                """
+                Always return an HttpResponseRedirect after successfully
+                dealing with POST data. This prevents data from being posted
+                twice if a user hits the Back button.
+                """
                 return HttpResponse("Done")
