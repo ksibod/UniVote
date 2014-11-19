@@ -30,15 +30,13 @@ $(document).ready(function() {
                 else if (response === "password_mismatch") {
                     $("#modal").hide();
                     $("#createUser").hide();
-                    setTimeout(function() {
-                        swal({   title: "Oops...",
-                                 text: "There are blank fields or the passwords you entered did not match.",
-                                 type: "error"},
-                                 function(){
-                                    $("#modal").show();
-                                    $("#createUser").show();
-                                 });
-                    }, 500);
+                    swal({   title: "Oops...",
+                             text: "There are blank fields or the passwords you entered did not match.",
+                             type: "error"},
+                             function(){
+                                $("#modal").show();
+                                $("#createUser").show();
+                             });
                 }
             },
             error: function(response){
@@ -68,14 +66,12 @@ function cancel()
 // Show that the user registered
 function showRegistered()
 {
-    setTimeout(function() {
-        swal({   title: "Awesome!",
-                 text: "You have successfully created an account. Click below to login!",
-                 confirmButtonColor: "#DD6B55",
-                 confirmButtonText: "Login",
-                 type: "success"
-        });
-    }, 500);
+    swal({   title: "Awesome!",
+             text: "You have successfully created an account. Click below to login!",
+             confirmButtonColor: "#DD6B55",
+             confirmButtonText: "Login",
+             type: "success"
+    });
 }
 
 

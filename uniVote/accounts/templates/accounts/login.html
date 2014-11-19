@@ -20,6 +20,7 @@
     <!-- For the create account popup -->
     <div id="modal"></div>
     <div id="createUser"></div>
+    <div id="userEmail"></div>
 
 
     {% block content %}
@@ -34,7 +35,7 @@
 
     <div id="login">
         <input id="usernameInput" placeholder="Username" name="username" type="text" />
-        <input id="passwordInput" placeholder="Password" name="password" type="password" />
+        <input id="passwordInput" title="" placeholder="Password" name="password" type="password" />
 
         <input id="loginButton" type="submit" value="Login" />
         <input type="hidden" name="next" value="/elections/" />

@@ -17,6 +17,10 @@
         confirmButtonText: 'OK',
         confirmButtonColor: '#AEDEF4',
         cancelButtonText: 'Cancel',
+        showPrompt: false,
+        promptText: null,
+        promptAlign: 'center',
+        promptTextRows: 0,
         imageUrl: null,
         imageSize: null,
         timer: null
@@ -176,13 +180,15 @@
    */
 
   window.sweetAlertInitialize = function() {
-    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p>Text</p><button class="cancel" tabIndex="2">Cancel</button><button class="confirm" tabIndex="1">OK</button></div>',
+    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><textarea tabIndex="1"></textarea><p>Text</p><button class="cancel" tabIndex="2">Cancel</button><button class="confirm" tabIndex="3">OK</button></div>',
         sweetWrap = document.createElement('div');
 
     sweetWrap.innerHTML = sweetHTML;
 
+    //Comment: We insert inside online so the offline overlay covers alerts
+    $("#online").append(sweetWrap);
     // For readability: check sweet-alert.html
-    document.body.appendChild(sweetWrap);
+    //document.body.appendChild(sweetWrap);
 
     // For development use only!
     /*jQuery.ajax({
@@ -235,6 +241,12 @@
         params.confirmButtonText  = arguments[0].confirmButtonText || defaultParams.confirmButtonText;
         params.confirmButtonColor = arguments[0].confirmButtonColor || defaultParams.confirmButtonColor;
         params.cancelButtonText   = arguments[0].cancelButtonText || defaultParams.cancelButtonText;
+
+        params.showPrompt         = arguments[0].showPrompt || defaultParams.showPrompt;
+        params.promptText         = arguments[0].promptText || defaultParams.promptText;
+        params.promptAlign        = arguments[0].promptAlign || defaultParams.promptAlign;
+        params.promptTextRows     = arguments[0].promptTextRows || defaultParams.promptTextRows;
+
         params.imageUrl           = arguments[0].imageUrl || defaultParams.imageUrl;
         params.imageSize          = arguments[0].imageSize || defaultParams.imageSize;
         params.doneFunction       = arguments[1] || null;
@@ -295,9 +307,16 @@
           }
           break;
         case ("click"):
+          var $promptText  = modal.querySelector('textarea');
+
           if (targetedConfirm && doneFunctionExists && modalIsVisible) { // Clicked "confirm"
 
-            params.doneFunction(true);
+            var text = undefined;
+            if (params.showPrompt){
+              text = $promptText.value;
+            }
+
+            params.doneFunction(true, text);
 
             if (params.closeOnConfirm) {
               closeModal();
@@ -356,9 +375,14 @@
 
 
     function handleKeyDown(e) {
+      //Ignore if offline is up
+      var offlineOverlay = $("#offline:visible").length > 0;
+      if (offlineOverlay)
+        return;
+
       var keyCode = e.keyCode || e.which;
 
-      if ([9,13,32,27].indexOf(keyCode) === -1) {
+      if ([9,13,27].indexOf(keyCode) === -1) {
         // Don't do work on keys we don't care about.
         return;
       }
@@ -392,9 +416,13 @@
         setFocusStyle($targetElement, params.confirmButtonColor); // TODO
 
       } else {
-        if (keyCode === 13 || keyCode === 32) {
+        //Allow enter for multiLine
+        var multiRow = params.showPrompt && params.promptTextRows > 1;
+
+        //Enter
+        if (!multiRow && (keyCode === 13)) {
             if (btnIndex === -1) {
-              // ENTER/SPACE clicked outside of a button.
+              // ENTER clicked outside of a button.
               $targetElement = $okButton;
             } else {
               // Do nothing - let the browser handle it.
@@ -409,6 +437,7 @@
         }
 
         if ($targetElement !== undefined) {
+          e.preventDefault(); //prevent any visible change
           fireClick($targetElement, e);
         }
       }
@@ -486,10 +515,43 @@
     var $title = modal.querySelector('h2'),
         $text = modal.querySelector('p'),
         $cancelBtn = modal.querySelector('button.cancel'),
-        $confirmBtn = modal.querySelector('button.confirm');
+        $confirmBtn = modal.querySelector('button.confirm'),
+        $promptText = modal.querySelector('textarea');
 
     // Title
     $title.innerHTML = escapeHtml(params.title).split("\n").join("<br>");
+
+    //Prompt
+    if (params.showPrompt){
+      //Setup and configure the text area
+      $promptText.style.display = 'inline-block';
+      var text = params.promptText;
+      if (!text)
+        text = "";
+
+      var multiRow = params.promptTextRows > 1;
+      if (multiRow){
+        $promptText.style.resize = "vertical";
+      } else {
+        $promptText.style.resize = "none";
+      }
+      var jqueryPromptText = $($promptText); //requires jquery
+      var minHeight = parseInt(jqueryPromptText.css('min-height'));
+      jqueryPromptText.height(minHeight * params.promptTextRows);
+      jqueryPromptText.css("text-align", params.promptAlign);
+      $promptText.value = escapeHtml(text);
+      $promptText.rows = params.promptTextRows;
+
+      //Select and focus
+      setTimeout(function(){
+        $promptText.select();
+        $promptText.focus();
+      }, 50);
+
+    } else {
+      hide($promptText);
+      $promptText.value = "";
+    }
 
     // Text
     $text.innerHTML = escapeHtml(params.text || '').split("\n").join("<br>");

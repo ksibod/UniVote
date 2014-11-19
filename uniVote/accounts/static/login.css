@@ -129,7 +129,7 @@ a, input
     margin-left: -300px;
     margin-top: -200px;
     border: 1px solid gray;
-    border-radius: 20px;
+    border-radius: 8px;
     width: 600px;
     height: auto;
     background-color: #f2f1ef;
@@ -203,4 +203,29 @@ a, input
 #cancelButton:active
 {
     box-shadow: none;
+}
+
+
+
+#forgotPassword
+{
+    text-decoration: none;
+    color: #34495e;
+    outline: none;
+}
+
+#userEmail
+{
+    display: none;
+}
+
+#emailInput
+{
+    margin-top: 1em;
+}
+
+
+.forgot .ui-dialog-titlebar
+{
+    display:none;
 }

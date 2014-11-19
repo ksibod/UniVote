@@ -70,3 +70,9 @@ def user_register(request):
         return render(request, 'accounts/register.html', context)
     else:
         return HttpResponseRedirect('/')
+
+
+# User forgot password
+def forgot_password(request):
+    print "MADE IT TO THE FUNCTION!!!!!"
+    return HttpResponse("forgotPassSuccess")

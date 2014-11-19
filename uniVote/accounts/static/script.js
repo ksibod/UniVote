@@ -8,7 +8,7 @@ $(document).ready(function() {
         show: {
             delay: 250
         },
-        content: "<a id='forgotPassword' href='#' onclick='forgotPassword();'>Forgot Password?</a>",
+        content: "<a id='forgotPassword' href='javascript:forgotPassword();'>Forgot Password?</a>",
         close: function(event, ui){
             ui.tooltip.hover(
                 function () {
@@ -56,6 +56,8 @@ $(document).ready(function() {
 
 });
 
+
+// This function just fades in the image and login div and loads the register html file into its div
 function dothefunc()
 {
 	$("#uniLogo").fadeIn("3000");
@@ -64,28 +66,26 @@ function dothefunc()
 }
 
 
+
 // Function to show incorrect credentials popup on login page
 function invalidCredentials()
 {
-    console.log("INVALID!");
-    setTimeout(function() {
-        swal({   title: "Oops...",
-                 text: "Your username or password is invalid. Please try again.",
-                 type: "error"});
-    }, 500);
+    swal({   title: "Oops...",
+             text: "Your username or password is invalid. Please try again.",
+             type: "error"});
     console.log("showing the popup");
 }
 
 
-// something went wrong server side
+
+// Something went wrong server side in the AJAX call
 function somethingWrong()
 {
-    setTimeout(function() {
-        swal({   title: "Oops...",
-                 text: "Something went wrong. Please try again!",
-                 type: "error"});
-    }, 500);
+    swal({   title: "Oops...",
+             text: "Something went wrong. Please try again!",
+             type: "error"});
 }
+
 
 
 // Function to show the popup when the create account button is pressed on the login page
@@ -93,4 +93,62 @@ function createAccount()
 {
     $("#modal").fadeIn("fast");
     $("#createUser").fadeIn("fast");
+}
+
+
+
+
+// Function to handle when the user clicks the "Forgot password" bubble tip
+function forgotPassword()
+{
+    console.log("they forgot...");
+    // Define the Dialog and its properties.
+    var message = "Please enter your email so we can send your password.";
+    var djangoFunc = "{% url 'accounts.views.forgot_password' %}";
+
+    $("#userEmail").dialog({
+        resizable: false,
+        draggable: false,
+        dialogClass: "forgot",
+        modal: false,
+        width: 500,
+        open: function () {
+            $(this).html("<img id='forgotmark' src='/static/images/info.png' style='margin-bottom: 20px; text-align: center; height: 100px; width: 100px;'/><div>" + message + "</div><form id='forgotEmailForm' method='POST' action=" + djangoFunc + "><input id='emailInput' class='formInput' placeholder='Email'/></form>");
+        },
+        buttons: {
+            "Send": function () {
+                // store email entered as a variable
+                var email = $("#emailInput").val();
+                console.log(email);
+
+                var form = $("forgotEmailForm");
+
+                // ajax call here for sending email notification
+                $.ajax({
+                    url: form.attr('action'),
+                    type: form.attr('method'),
+                    data: form.serialize(),
+                    dataType: 'text',
+                    success: function(response){
+                        // code to update DOM here
+                        console.log(response);
+                        if (response === "forgotPassSuccess") console.log("got the response back");
+                    },
+                    error: function(response){
+                        // log ajax errors?  something went wrong
+                        console.log(response);
+                        somethingWrong();
+                    }
+                });
+
+                $(this).dialog("close");
+                swal({   title: "Sent!",
+                    text: "You should receive an email with your password shortly.",
+                    type: "success"});
+            },
+            "Cancel": function () {
+                $(this).dialog("close");
+            }
+        }
+    });
 }
