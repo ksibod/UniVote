@@ -20,7 +20,6 @@ def user_login(request):
     if request.user.is_anonymous():
         if request.method == 'POST':
             # NEED A FORM FOR USER TO LOGIN:
-            response_data = {}
 
             username = request.POST['username']
             password = request.POST['password']
@@ -31,34 +30,24 @@ def user_login(request):
                 if user.is_active:
                     # This logs him in:
                     login(request, user)
-                    # redirect to elections:
-                    #return HttpResponseRedirect('/elections/')
-                    response_data['result'] = 'success'
-                    response_data['message'] = 'Logged In!'
-                    return HttpResponse("successseses")
-                    return HttpResponse(json.dumps(response_data), content_type="application/json")
-                #else:
+                    return HttpResponse("loginSuccess")
+                else:
                     # Return a 'disabled account' message:
-                    #return HttpResponse("Not active")
+                    return HttpResponse("loginFail")
 
             else:
-                #return HttpResponse("Wrong username/password")
-                response_data['result'] = 'fail'
-                response_data['message'] = 'Not valid!'
-                return HttpResponse("fail")
-                return HttpResponse(json.dumps(response_data), content_type="application/json")
-
-
+                # User not in the system
+                return HttpResponse("loginFail")
+        else:
+            return render(request, 'accounts/login.html')
     else:
         return HttpResponseRedirect("/elections")
-    return HttpResponseRedirect("/")
 
 
 # User Logout View
 def user_logout(request):
     logout(request)
-    # return HttpResponse('YOU HAVE BEEN LOGGED OUT.')
-    return render(request, 'accounts/logout.html')
+    return HttpResponseRedirect("/")
 
 
 # User Register View
@@ -66,10 +55,12 @@ def user_register(request):
     if request.user.is_anonymous():
         if request.method == 'POST':
             form = UserRegisterForm(request.POST)
-            if form.is_valid:
+            if form.is_valid():
                 form.save()
-                return render(request, 'accounts/registered.html')
-                #return HttpResponse('User created succcessfully.')
+                return HttpResponse("registerSuccess")
+            else:
+                print form.error_messages
+                return HttpResponse(form.error_messages)
         else:
             form = UserRegisterForm()
         context = {}
@@ -77,6 +68,5 @@ def user_register(request):
         context['form'] = form
         #Pass the context to a template
         return render(request, 'accounts/register.html', context)
-        # return render_to_response('accounts/register.html', context)
     else:
         return HttpResponseRedirect('/')

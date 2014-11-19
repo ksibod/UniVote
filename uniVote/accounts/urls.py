@@ -4,13 +4,13 @@ from django.conf.urls import patterns, url
 # /accounts/...    :
 urlpatterns = patterns(
     '',
-    # ex: /
-    url(r'^$', 'django.contrib.auth.views.login', {'template_name':
-        'accounts/login.html'}),
-    #url(r'^login/$', 'django.contrib.auth.views.login', {'template_name':
-    #    'accounts/login.html'}),
-    # ex: /accounts/logout/
+    # This is for the login page - we are overriding the django default login system and using our own
+    # function "user_login" in accounts/views.py
+    url(r'^$', 'accounts.views.user_login'),
+
+    # For the logout function
     url(r'^logout/$', 'accounts.views.user_logout'),
-    # ex: /accounts/register/
+
+    # For the register function
     url(r'^register/$', 'accounts.views.user_register'),
     )

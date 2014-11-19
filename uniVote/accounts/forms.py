@@ -15,10 +15,3 @@ class UserRegisterForm(UserCreationForm):
                   'username': forms.TextInput(attrs={'class': 'formInput'}),
                   'password1': forms.TextInput(attrs={'class': 'formInput'}),
                   'password2': forms.TextInput(attrs={'class': 'formInput'})}
-
-
-# class AuthenticationForm(AuthenticationForm):
-
-#     class Meta:
-#         model = User
-#         fields = ('username', 'password')

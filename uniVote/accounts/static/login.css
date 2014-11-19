@@ -6,6 +6,11 @@ body
     height: auto;
 }
 
+a, input
+{
+    outline: none;
+}
+
 
 #uniLogo
 {
@@ -14,14 +19,6 @@ body
     height: 250px;
     width: 900px;
 	display: none;
-}
-
-
-table
-{
-    margin-top: 2em;
-    margin-left: auto;
-    margin-right: auto;
 }
 
 
@@ -39,13 +36,38 @@ table
 }
 
 
+#usernameInput
+{
+    margin-top: 2em;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 225px;
+    height: 35px;
+    outline: none;
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+#passwordInput
+{
+    margin-top: 1em;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 225px;
+    height: 35px;
+    outline: none;
+    font-size: 16px;
+    padding-left: 10px;
+}
+
+
 
 #loginButton
 {
     margin-top: 1em;
-    width: 80px;
+    width: 235px;
     height: 30px;
-    font-size: 14px;
+    font-size: 15px;
     font-weight: bold;
     color: #fff;
     background-image: -moz-linear-gradient(top, #acd6ef, #6495ed);
@@ -58,6 +80,11 @@ table
 }
 
 
+#loginButton:active
+{
+    box-shadow: none;
+}
+
 
 .bottomRow
 {
@@ -66,15 +93,13 @@ table
 
 .formInput
 {
-    font-size: 40px;
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 225px;
+    height: 35px;
     outline: none;
-    color: #777;
+    font-size: 16px;
     padding-left: 10px;
-    margin: 10px;
-    margin-top: 10px;
-    margin-left: 18px;
-    width: 250px;
-    height: 60px;
 }
 
 
@@ -101,12 +126,12 @@ table
     top: 50%;
     left: 50%;
     z-index: 9999;
-    margin-left: -250px;
+    margin-left: -300px;
     margin-top: -200px;
     border: 1px solid gray;
     border-radius: 20px;
-    width: 500px;
-    height: 300px;
+    width: 600px;
+    height: auto;
     background-color: #f2f1ef;
 }
 
@@ -123,4 +148,59 @@ table
     z-index: 9998;
     top: 0;
     left: 0;
+}
+
+
+
+
+
+
+#signupButton
+{
+    margin-top: 2em;
+    margin-bottom: 1em;
+    margin-left: 3em;
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    background-image: -moz-linear-gradient(top, #e67e22, #f39c12);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e67e22), to(#f39c12));
+    border-radius: 5px;
+    border: 1px solid #ff7518;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .5);
+    cursor: pointer;
+    outline: none;
+}
+
+
+#signupButton:active
+{
+    box-shadow: none;
+}
+
+#cancelButton
+{
+    margin-top: 2em;
+    margin-bottom: 1em;
+    margin-right: 3em;
+    width: 150px;
+    height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    background-image: -moz-linear-gradient(top, #bdc3c7, #95a5a6);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#bdc3c7), to(#95a5a6));
+    border-radius: 5px;
+    border: 1px solid #7f8c8d;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .5);
+    cursor: pointer;
+    outline: none;
+}
+
+
+#cancelButton:active
+{
+    box-shadow: none;
 }
