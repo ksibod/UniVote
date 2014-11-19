@@ -1,34 +1,25 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}register.css" />
-<script type="text/javascript" src="{{ STATIC_URL }}registerscript.js"></script>
+<html>
+
+<head>
+    <script type="text/javascript" src="{{ STATIC_URL }}registerscript.js"></script>
+</head>
 
 
-<form action="/accounts/register/" method="POST">
-{% csrf_token %}
-    <h2>Please enter your details . . .</h2>
+    <form id="regForm" action="{% url 'accounts.views.user_register' %}" method="POST">
+    {% csrf_token %}
+        <h2>Please enter your details . . .</h2>
 
-        <div id="column1">
-        {{ form.first_name.label_tag }}  <br>
-        {{ form.first_name }} <br><br>
+            <input style="margin-bottom: 1em; margin-right: 1em;" id="firstName" class="formInput" placeholder="First Name" name="first_name" type="text" />
+            <input style="margin-bottom: 1em; margin-left: 1em;"  id="lastName" class="formInput"  placeholder="Last Name" name="last_name" type="text" />
+            <input style="margin-bottom: 1em; margin-right: 1em;"  id="eMail" class="formInput"  placeholder="Email" name="email" type="text" />
 
-        {{ form.last_name.label_tag }}  <br>
-        {{ form.last_name }} <br><br>
+            <input style="margin-bottom: 1em; margin-left: 1em;"  id="userName" class="formInput"  placeholder="Username" name="username" type="text" />
+            <input style="margin-right: 1em;"  id="pass1" class="formInput"  placeholder="Password" name="password1" type="password" />
+            <input style="margin-left: 1em;" id="pass2" class="formInput"  placeholder="Password Confirmation" name="password2" type="password" />
 
-        {{ form.email.label_tag }}  <br>
-        {{ form.email }}
-        </div>
+        <input id="cancelButton" onclick="javascript:cancel();" value="Cancel" type="button">
+        <input id="signupButton" type="submit" value="Sign Up">
 
-        <div id="column2">
-        {{ form.username.label_tag }}  <br>
-        {{ form.username }} <br><br>
+    </form>
 
-        {{ form.password1.label_tag }}  <br>
-        {{ form.password1 }} <br><br>
-
-        {{ form.password2.label_tag }}  <br>
-        {{ form.password2 }}
-        </div> <br>
-
-    <input id="cancelButton" onclick="javascript:cancel();" value="Cancel" type="button">
-    <input id="signupButton" type="submit" value="Sign Up">
-
-</form>
+</html>

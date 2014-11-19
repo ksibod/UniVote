@@ -1,60 +1,52 @@
-<link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}images/favicon.png"/>
-<link rel="stylesheet" href="{{ STATIC_URL }}login.css" />
-<link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
-<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/sweet-alert.css">
-<script type="text/javascript" src="{{ STATIC_URL }}lib/sweet-alert.min.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="shortcut icon" type="image/png" href="{{STATIC_URL}}images/favicon.png"/>
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}login.css" />
+    <link rel="stylesheet" type="text/css" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css" />
+    <link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/sweet-alert.css">
+    <script type="text/javascript" src="{{ STATIC_URL }}lib/sweet-alert.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}script.js"></script>
+</head>
 
 
 
 
 
 
-<!-- For the create account popup -->
-<div id="modal"></div>
-<div id="createUser"></div>
+    <!-- For the create account popup -->
+    <div id="modal"></div>
+    <div id="createUser"></div>
 
 
-{% block content %}
-{% if form.errors %}
-        <script>invalidCredentials();</script>
-{% endif %}
+    {% block content %}
+    {% if form.errors %}
+          <!--  <script>invalidCredentials();</script>  -->
+    {% endif %}
 
-<img id="uniLogo" src="/static/images/uniVote.png" />
+    <img id="uniLogo" src="/static/images/uniVote.png" />
 
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-{% csrf_token %}
+    <form id="loginForm" method="POST" action="{% url 'accounts.views.user_login' %}">
+    {% csrf_token %}
 
-<div id="login">
-    <table>
-        <tr>
-            <td>{{ form.username.label_tag }}</td>
-        </tr>
-        <tr>
-            <td class="bottomRow">{{ form.username }}</td>
-        </tr>
+    <div id="login">
+        <input id="usernameInput" placeholder="Username" name="username" type="text" />
+        <input id="passwordInput" placeholder="Password" name="password" type="password" />
 
-        <tr>
-            <td>{{ form.password.label_tag }}</td>
-        </tr>
-        <tr>
-            <td  class="bottomRow">{{ form.password }}</td>
-        </tr>
-    </table>
+        <input id="loginButton" type="submit" value="Login" />
+        <input type="hidden" name="next" value="/elections/" />
 
-    <input id="loginButton" type="submit" value="Login" />
-    <input type="hidden" name="next" value="/elections/" />
+        <p style="display: inline-block;">No account? &nbsp</p>
+        <a id="createAccountButton" href="javascript:createAccount();">Create one!</a>
+    </div>
+    </form>
 
-    <br>
-    <p style="display: inline-block;">No account? &nbsp</p>
-    <a id="createAccountButton" href="javascript:createAccount();">Create one!</a>
-</div>
-</form>
+
+    {% endblock %}
 
 
 
-
-
-{% endblock %}
+</html>

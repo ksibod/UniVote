@@ -7,6 +7,10 @@ from django.core.context_processors import csrf
 #Import a user registration form
 from forms import UserRegisterForm
 
+#import json stuff
+import json
+
+
 # User authentication in Django
 # https://docs.djangoproject.com/en/dev/topics/auth/
 
@@ -19,30 +23,31 @@ def user_login(request):
 
             username = request.POST['username']
             password = request.POST['password']
+
             #This authenticates the user
             user = authenticate(username=username, password=password)
             if user is not None:
                 if user.is_active:
                     # This logs him in:
                     login(request, user)
-                    # redirect to elections:
-                    return HttpResponseRedirect('/elections/')
+                    return HttpResponse("loginSuccess")
                 else:
                     # Return a 'disabled account' message:
-                    return HttpResponse("Not active")
+                    return HttpResponse("loginFail")
 
             else:
-                return HttpResponse("Wrong username/password")
+                # User not in the system
+                return HttpResponse("loginFail")
+        else:
+            return render(request, 'accounts/login.html')
     else:
         return HttpResponseRedirect("/elections")
-    return HttpResponseRedirect("/")
 
 
 # User Logout View
 def user_logout(request):
     logout(request)
-    # return HttpResponse('YOU HAVE BEEN LOGGED OUT.')
-    return render(request, 'accounts/logout.html')
+    return HttpResponseRedirect("/")
 
 
 # User Register View
@@ -50,10 +55,12 @@ def user_register(request):
     if request.user.is_anonymous():
         if request.method == 'POST':
             form = UserRegisterForm(request.POST)
-            if form.is_valid:
+            if form.is_valid():
                 form.save()
-                return render(request, 'accounts/registered.html')
-                #return HttpResponse('User created succcessfully.')
+                return HttpResponse("registerSuccess")
+            else:
+                print form.error_messages
+                return HttpResponse(form.error_messages)
         else:
             form = UserRegisterForm()
         context = {}
@@ -61,6 +68,5 @@ def user_register(request):
         context['form'] = form
         #Pass the context to a template
         return render(request, 'accounts/register.html', context)
-        # return render_to_response('accounts/register.html', context)
     else:
         return HttpResponseRedirect('/')

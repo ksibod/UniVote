@@ -1,6 +1,6 @@
 from django.conf.urls import patterns, url
 
-from elections import views
+import views
 
 urlpatterns = patterns(
     '',
