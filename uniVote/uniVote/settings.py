@@ -97,3 +97,13 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
 STATIC_URL = '/static/'
+
+
+# Use for emails
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'donotreply.univote@gmail.com'
+EMAIL_HOST_PASSWORD = 'univotecsce4444'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'donotreply.univote@gmail.com'
+SERVER_EMAIL = EMAIL_HOST_USER

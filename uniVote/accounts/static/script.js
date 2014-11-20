@@ -1,4 +1,6 @@
 $(document).ready(function() {
+
+
 	dothefunc();
 
 
@@ -101,27 +103,20 @@ function createAccount()
 // Function to handle when the user clicks the "Forgot password" bubble tip
 function forgotPassword()
 {
-    console.log("they forgot...");
-    // Define the Dialog and its properties.
-    var message = "Please enter your email so we can send your password.";
-    var djangoFunc = "{% url 'accounts.views.forgot_password' %}";
-
+    // Define the Dialog and its properties
     $("#userEmail").dialog({
         resizable: false,
         draggable: false,
         dialogClass: "forgot",
         modal: false,
         width: 500,
-        open: function () {
-            $(this).html("<img id='forgotmark' src='/static/images/info.png' style='margin-bottom: 20px; text-align: center; height: 100px; width: 100px;'/><div>" + message + "</div><form id='forgotEmailForm' method='POST' action=" + djangoFunc + "><input id='emailInput' class='formInput' placeholder='Email'/></form>");
+        open: function () {;
         },
         buttons: {
             "Send": function () {
                 // store email entered as a variable
                 var email = $("#emailInput").val();
-                console.log(email);
-
-                var form = $("forgotEmailForm");
+                var form = $("#forgotEmailForm");
 
                 // ajax call here for sending email notification
                 $.ajax({
@@ -143,7 +138,7 @@ function forgotPassword()
 
                 $(this).dialog("close");
                 swal({   title: "Sent!",
-                    text: "You should receive an email with your password shortly.",
+                    text: "You should receive an email with instructions to change your password shortly.",
                     type: "success"});
             },
             "Cancel": function () {

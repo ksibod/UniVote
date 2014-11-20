@@ -13,4 +13,9 @@ urlpatterns = patterns(
 
     # For the register function
     url(r'^register/$', 'accounts.views.user_register'),
-    )
+
+    # For sending email - forgot password
+    url(r'^forgotPass/$', 'accounts.views.user_forgot_password'),
+
+    # password reset templates
+)
