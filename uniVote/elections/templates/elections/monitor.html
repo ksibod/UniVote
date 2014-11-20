@@ -1,10 +1,21 @@
+<link rel="stylesheet" href="{{ STATIC_URL }}monitor.css" />
+
+<a id="logoutButton" href="{% url 'accounts.views.user_logout' %}" >Logout</a>
+
+{% if request.user.is_staff %}
+    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
+    <a id="adminButton" href="/admin/">Administration Panel</a>
+    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
+    <a id="electionsButton" href="/elections/">Return to Elections</a>
+{% endif %}
+
 <h1>Election Monitoring</h1>
 
 {% for race, candidates in races.items %}
     <h3>{{ race }}</h3>
     {% for candidate in candidates %}
         {% for cand, num_votes in votes.items %}
-            <p>{{ candidate }}
+            <p style="margin-left: 2em;">{{ candidate }}
             {% ifequal cand.candidate_name candidate %}
              - {{ num_votes }}
             {% endifequal %}
@@ -12,5 +23,3 @@
         {% endfor %}
     {% endfor %}
 {% endfor %}
-
-<a href="/elections/">Return to Elections</a>
