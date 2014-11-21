@@ -18,4 +18,10 @@ urlpatterns = patterns(
     url(r'^forgotPass/$', 'accounts.views.user_forgot_password'),
 
     # password reset templates
+    url(r'^accounts/password/reset/$', 'django.contrib.auth.views.password_reset',
+        {'post_reset_redirect' : '/accounts/password/reset/done/'}),
+    url(r'^accounts/password/reset/done/$', 'django.contrib.auth.views.password_reset_done'),
+    url(r'^accounts/password/reset/(?P<uidb64>[0-9A-Za-z]+)-(?P<token>.+)/$', 'django.contrib.auth.views.password_reset_confirm',
+        {'post_reset_redirect' : '/accounts/password/done/'}),
+    url(r'^accounts/password/done/$', 'django.contrib.auth.views.password_reset_complete')
 )

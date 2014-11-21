@@ -1,0 +1,101 @@
+body
+{
+    background-color: #3498db;
+    font-family: Helvetica;
+    color: white;
+    height: auto;
+}
+
+a, input
+{
+    outline: none;
+}
+
+
+#headerBar
+{
+    background-color: #34495e;
+    width: 100%;
+    height: 4em;
+    font-size: 18px;
+}
+
+
+
+#changePassDiv
+{
+    margin-top: 6em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 600px;
+    height: 500px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+
+#formTable
+{
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+#changePassButton
+{
+    margin-top: 1em;
+    margin-bottom: 1em;
+    margin-left: auto;
+    margin-right: auto;
+    width: 225px;
+    height: 30px;
+    font-size: 15px;
+    font-weight: bold;
+    color: #fff;
+    background-image: -moz-linear-gradient(top, #e67e22, #f39c12);
+    background-image: -webkit-gradient(linear, left top, left bottom, from(#e67e22), to(#f39c12));
+    border-radius: 5px;
+    border: 1px solid #ff7518;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .3), inset 0 1px 0 rgba(255, 255, 255, .5);
+    cursor: pointer;
+    outline: none;
+}
+
+
+#changePassButton:active
+{
+    box-shadow: none;
+}
+
+
+#newPass1
+{
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 225px;
+    height: 35px;
+    outline: none;
+    font-size: 16px;
+    padding-left: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+}
+
+
+#newPass2
+{
+    border: 1px solid gray;
+    border-radius: 5px;
+    width: 225px;
+    height: 35px;
+    outline: none;
+    font-size: 16px;
+    padding-left: 10px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1em;
+}

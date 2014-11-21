@@ -19,10 +19,11 @@
 
     <!-- For the create account popup -->
     <div id="modal"></div>
+    <img id="loadingImg" src="/static/images/loading.gif"/>
     <div id="createUser"></div>
     <div id="userEmail">
         <img id='forgotmark' src='/static/images/info.png' style='margin-bottom: 20px; text-align: center; height: 100px; width: 100px;'/>
-        <div>Please enter your email so we can send you a link to update your password.</div>
+        <div>Enter your e-mail address below, and we'll e-mail instructions for setting a new one.</div>
         <form id='forgotEmailForm' method='POST' action="{% url 'accounts.views.user_forgot_password' %}">
             {% csrf_token %}
             <input id='emailInput' class='formInput' placeholder='Email' name='email' />

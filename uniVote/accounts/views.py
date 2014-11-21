@@ -80,9 +80,8 @@ def user_register(request):
 def user_forgot_password(request):
     if request.method == 'POST':
         emailAddress = request.POST['email']
-        message = "<html><p>You have requested this email to update your password for the uniVote application.</p><p>Please click the link below to continue:</p><a href='127.0.0.1:8000'>Update Password</a><p>If you have received this email in error, please disregard.</p><p>Thanks,</p><p>uniVote! Team</p></html>"
-        email = EmailMessage("Password Reset", message, to=[emailAddress])
-        #email.attach_file("static/images/uniVote.png")
+        email = EmailMessage("Password Reset", to=[emailAddress])
+        email.attach("/templates/accounts/password_reset_email.html")
         email.content_subtype = "html"
         email.send()
         return HttpResponse("forgotPassSuccess")

@@ -150,6 +150,17 @@ a, input
     left: 0;
 }
 
+#loadingImg
+{
+    display: none;
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	margin-left: -73px;
+	margin-top: -73px;
+}
+
+
 
 
 

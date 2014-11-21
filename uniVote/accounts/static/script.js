@@ -104,7 +104,7 @@ function createAccount()
 function forgotPassword()
 {
     // Define the Dialog and its properties
-    $("#userEmail").dialog({
+    $("div#userEmail").dialog({
         resizable: false,
         draggable: false,
         dialogClass: "forgot",
@@ -114,20 +114,26 @@ function forgotPassword()
         },
         buttons: {
             "Send": function () {
-                // store email entered as a variable
-                var email = $("#emailInput").val();
+
+                $(this).dialog("close");
+                startLoading();
                 var form = $("#forgotEmailForm");
 
                 // ajax call here for sending email notification
                 $.ajax({
-                    url: form.attr('action'),
+                    url: "accounts/password/reset/",
                     type: form.attr('method'),
                     data: form.serialize(),
                     dataType: 'text',
                     success: function(response){
                         // code to update DOM here
                         console.log(response);
-                        if (response === "forgotPassSuccess") console.log("got the response back");
+                        stopLoading();
+                        if (response === "resetFormSuccess") {
+                            swal({   title: "Sent!",
+                                text: "We've e-mailed you instructions for setting your password to the e-mail address you submitted. You should be receiving it shortly.",
+                                type: "success"});
+                        }
                     },
                     error: function(response){
                         // log ajax errors?  something went wrong
@@ -136,10 +142,7 @@ function forgotPassword()
                     }
                 });
 
-                $(this).dialog("close");
-                swal({   title: "Sent!",
-                    text: "You should receive an email with instructions to change your password shortly.",
-                    type: "success"});
+
             },
             "Cancel": function () {
                 $(this).dialog("close");
@@ -147,3 +150,16 @@ function forgotPassword()
         }
     });
 }
+
+
+
+// Function to show the loading gif
+function startLoading () {
+	$("#modal").fadeIn("fast");
+	$("#loadingImg").fadeIn("fast");
+};
+
+function stopLoading () {
+	$("#modal").fadeOut("fast");
+	$("#loadingImg").fadeOut("fast");
+};
