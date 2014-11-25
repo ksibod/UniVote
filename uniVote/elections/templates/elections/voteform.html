@@ -1,5 +1,16 @@
 {% extends "elections/base.html" %}
+
+
 {% block content %}
+<link rel="stylesheet" href="{{ STATIC_URL }}voteform.css" />
+
+
+                <br><br>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
+
+
+
 <h1>{{ election.election_text }} Elections</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -12,7 +23,7 @@
 {% for race in election.race_set.all %}
 	<fieldset class = "radiogroup">
 	<input type="hidden" name="race_id[]" value="{{race.id}}">
-	<legend><label for="race{{ forloop.counter }}">{{ race.race_name }}</label></legend>
+	<legend style="font-weight:bold;"><label for="race{{ forloop.counter }}">{{ race.race_name }}</label></legend>
 	<p>{{ race.race_description }}</p>
 		
 	<!-- Cycle through all the candidates in the given race -->	
@@ -22,11 +33,11 @@
 	<a href="/elections/profile/{{ candidate.id }}/">PROFILE</a><br />
 	{% endfor %} <!-- End candidate cycle -->
 	</fieldset>
-	<br>
+	<br><br>
 {% endfor %} <!-- End race cycle -->
 
 <!-- Form submit -->
-<input type="submit" value="Vote" />
+<input id="voteButton" type="submit" value="Vote!" />
 </form>
 {% endblock %}
 
@@ -35,10 +46,11 @@
 <br><hr>
 <table>
 	<tr>
-		<td><a href="/elections/">Return to Elections</a></td>
+		<td>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
+</td>
 	</tr>
-	<tr>
-		<td><a href="/accounts/logout">Logout of System</a></td>
-	</tr>
+
 </table>
 {% endblock %}
