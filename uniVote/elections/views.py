@@ -7,6 +7,11 @@ from django.views.generic.detail import BaseDetailView, \
     SingleObjectTemplateResponseMixin
 from models import *
 
+# for emailing users with receipt
+from django.core.mail import EmailMessage
+import time
+import uuid
+
 
 class IndexView(generic.ListView):
     template_name = 'elections/index.html'
@@ -178,8 +183,7 @@ class HybridDetailView(JSONResponseMixin, SingleObjectTemplateResponseMixin, Bas
             obj = context['object'].as_dict()
             return JSONResponseMixin.render_to_response(self, obj)
         else:
-            return SingleObjectTemplateResponseMisin.render_to_response(self, context)
-
+            return SingleObjectTemplateResponseMixin.render_to_response(self, context)
 
 
 def election_register(request, election_id):
@@ -228,52 +232,83 @@ def vote(request, election_id):
     # Gets a list of races that match the election id
     races = Race.objects.filter(election_id=election_id)
 
-    # Cycle through the dynamic list of races and processes the Post data
-    for race in races:
-        try:
-            # Instance objects need to be made to pass into the database
-            race_object = get_object_or_404(Race, pk=race.id)
-            user_object = get_object_or_404(Voter, pk=request.user.id)
-            candidate_object = get_object_or_404(
-                Candidate, pk=request.POST['candidate_race_' + str(race.id)])
+    if request.user.is_anonymous():
+        return HttpResponse("anonymous")
 
-        except (KeyError, Candidate.DoesNotExist):
-            # Redisplay the election voting form:
-            return render(
-                request,
-                'elections/voteform.html',
-                {
-                    'election': election,
-                    'error_message': 'You didn\'t select a candidate.',
-                })
-        else:
-            # Check for previous vote should go here,
-            # replacing vote if already voted, if not newvote
-            vote_check = Votes.objects.filter(
-                race_voted_in=race_object,
-                voter_who_voted=user_object)
+    else:
+        # Cycle through the dynamic list of races and processes the Post data
+        for race in races:
+            try:
+                # Instance objects need to be made to pass into the database
+                race_object = get_object_or_404(Race, pk=race.id)
+                user_object = get_object_or_404(Voter, pk=request.user.id)
+                candidate_object = get_object_or_404(
+                    Candidate, pk=request.POST['candidate_race_' + str(race.id)])
 
-            if vote_check:
-                return render(
-                    request,
-                    'elections/voteform.html',
-                    {
-                        'election': election,
-                        'error_message': 'You already voted in this race.',
-                    })
+                # TODO  Below corresponds to voters being registered to vote - it needs to be changed in the models first though
+                #if request.Voter.is_approved() is False:
+                #    return HttpResponse("userNotApproved")
+
+
+
+            except (KeyError, Candidate.DoesNotExist):
+                # Redisplay the election voting form:
+                # return render(
+                #     request,
+                #     'elections/voteform.html',
+                #     {
+                #         'election': election,
+                #         'error_message': 'You didn\'t select a candidate.',
+                #     })
+                return HttpResponse("noSelection")
             else:
-                # Create a new databse entry with the objects created above.
-                # Save the entry.
-                new_vote = Votes(race_voted_in=race_object,
-                                 voter_who_voted=user_object,
-                                 candidate_voted_for=candidate_object)
-                new_vote.save()
+                # Check for previous vote should go here,
+                # replacing vote if already voted, if not newvote
+                vote_check = Votes.objects.filter(
+                    race_voted_in=race_object,
+                    voter_who_voted=user_object)
 
-                # Send user to a page reporting success of vote
-                """
-                Always return an HttpResponseRedirect after successfully
-                dealing with POST data. This prevents data from being posted
-                twice if a user hits the Back button.
-                """
-                #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
-                return HttpResponse("Done")
+                if vote_check:
+                    # return render(
+                    #     request,
+                    #     'elections/voteform.html',
+                    #     {
+                    #         'election': election,
+                    #         'error_message': 'You already voted in this race.',
+                    #     })
+                    return HttpResponse("alreadyVoted")
+
+                else:
+                    # Create a new databse entry with the objects created above.
+                    # Save the entry.
+                    new_vote = Votes(race_voted_in=race_object,
+                                     voter_who_voted=user_object,
+                                     candidate_voted_for=candidate_object)
+                    new_vote.save()
+
+                    # Send user to a page reporting success of vote
+                    """
+                    Always return an HttpResponseRedirect after successfully
+                    dealing with POST data. This prevents data from being posted
+                    twice if a user hits the Back button.
+                    """
+
+                    # this is for emailing the confirmation receipt to the voter
+                    timeOfDay = time.strftime("%I:%M")
+                    date = time.strftime("%m:%d:%Y")
+                    votedFor = candidate_object.user.first_name + " " + candidate_object.user.last_name
+                    x = uuid.uuid4()
+                    confirmationNum = str(x)
+
+                    message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
+                              "Date: " + date + "\n" + "Time: " + timeOfDay + "" \
+                              "You voted for: " + votedFor + "\n" \
+                              "Confirmation Number: " + confirmationNum
+
+                    emailAddress = request.user.email
+                    email = EmailMessage("Vote Confirmation", message, to=emailAddress)
+                    email.send()
+
+
+                    #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
+                    return HttpResponse("Done")

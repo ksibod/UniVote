@@ -3,6 +3,9 @@
 
 {% block content %}
 <link rel="stylesheet" href="{{ STATIC_URL }}voteform.css" />
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}lib/sweet-alert.css">
+<script type="text/javascript" src="{{ STATIC_URL }}lib/sweet-alert.min.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL}}votescript.js"></script>
 
 
                 <br><br>
@@ -16,7 +19,7 @@
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
 
 <!-- Start form - from and sent to corresponding /'election_id'/vote  page -->
-<form action="{% url 'elections:vote' election.id %}" method="post">
+<form id="voteForm" action="{% url 'elections:vote' election.id %}" method="post">
 {% csrf_token %}
 
 <!-- Cycle through all races assigned to an election -->
