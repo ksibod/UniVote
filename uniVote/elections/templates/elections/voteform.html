@@ -18,8 +18,8 @@
 	<!-- Cycle through all the candidates in the given race -->	
 	{% for candidate in race.candidate_set.all %} 	
     <input type="radio" name="candidate_race_{{race.id}}" value="{{ candidate.id }}" />
-    <label for="race_{{race.id}}">{{ candidate.candidate_name }}</label>
-	<a href="/elections/profile/{{ candidate.id }}/">LINK TO PROFILE GOES HERE WHEN FIXED</a><br />
+    <label for="race_{{race.id}}">{{ candidate.user.first_name }} {{ candidate.user.last_name }}</label>
+	<a href="/elections/profile/{{ candidate.id }}/">PROFILE</a><br />
 	{% endfor %} <!-- End candidate cycle -->
 	</fieldset>
 	<br>
