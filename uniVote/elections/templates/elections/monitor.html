@@ -1,5 +1,10 @@
 {% extends "elections/base.html" %}
 {% block content %}
+                <br><br>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
+
+
 <h1>Election Monitoring</h1>
 
 {% for race, candidates in races.items %}
@@ -20,10 +25,10 @@
 <br><hr>
 <table>
 	<tr>
-		<td><a href="/elections/">Return to Elections</a></td>
-	</tr>
-	<tr>
-		<td><a href="/accounts/logout">Logout of System</a></td>
+		<td>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
+</td>
 	</tr>
 </table>
 {% endblock %}

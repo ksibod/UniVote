@@ -122,7 +122,7 @@ table#t01
 
 table#t01 tr:nth-child(odd)
 {
-    background-color: #D0D0D0;
+    background-color: #ecf0f1;
 }
 table#t01 tr:nth-child(even)
 {
@@ -131,7 +131,7 @@ table#t01 tr:nth-child(even)
 table#t01 th
 {
     color: white;
-    background-color: black;
+    background-color: #34495e;
 }
 table#t01 td#td02
 {
