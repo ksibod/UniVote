@@ -12,7 +12,7 @@
 				<th>Total Votes: {{ race.id.count }}</th>
 				{% for candidate in race.candidate_set.all %}
 					<tr>
-						<td>{{ candidate.candidate_name }}</td>
+						<td>{{ candidate.user.last_name }}</td>
 						<td>{{ results.num_votes }}</td></tr>
 				{% endfor %}
 				

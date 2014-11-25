@@ -71,11 +71,11 @@ class MonitorView(generic.ListView):
             if candidate.race in race_and_candidates.keys():
                 # add race and its first candidate
                 race_and_candidates[candidate.race].append(
-                    candidate.candidate_name)
+                    candidate.user.last_name)
             else:
                 # create new array in this slot:
                 race_and_candidates[candidate.race] = [
-                    candidate.candidate_name]
+                   candidate.user.last_name]
 
         context['votes'] = vote_totals
         context['races'] = race_and_candidates
@@ -126,11 +126,11 @@ class ResultsView(generic.DetailView):
             if candidate.race in race_and_candidates.keys():
                 # add race and its first candidate
                 race_and_candidates[candidate.race].append(
-                    candidate.candidate_name)
+                    candidate.user.last_name)
             else:
                 # create new array in this slot:
                 race_and_candidates[candidate.race] = [
-                    candidate.candidate_name]
+                    candidate.user.last_name]
 
         context['votes'] = vote_totals
         context['races'] = race_and_candidates

@@ -7,7 +7,7 @@
     {% for candidate in candidates %}
         {% for cand, num_votes in votes.items %}
             <p style="margin-left: 2em;">{{ candidate }}
-            {% ifequal cand.candidate_name candidate %}
+            {% ifequal cand.user.last_name candidate %}
              - {{ num_votes }}
             {% endifequal %}
             </p>
