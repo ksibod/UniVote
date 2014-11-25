@@ -20,7 +20,7 @@ class IndexView(generic.ListView):
 class DetailView(generic.DetailView):
     model = Election
     template_name = 'elections/detail.html'
-    
+
     def get_context_data(self, **kwargs):
         context = super(DetailView, self).get_context_data(**kwargs)
 
@@ -36,7 +36,7 @@ class DetailView(generic.DetailView):
             else:
                 # create new array in this slot:
                 voter_in_election[voter.election_id] = [voter.id]
-            
+
         context['voters'] = voter_in_election
         return context
 
@@ -71,14 +71,35 @@ class MonitorView(generic.ListView):
             if candidate.race in race_and_candidates.keys():
                 # add race and its first candidate
                 race_and_candidates[candidate.race].append(
-                    candidate.user.last_name)
+                    candidate.user.first_name + ' ' + candidate.user.last_name)
             else:
                 # create new array in this slot:
                 race_and_candidates[candidate.race] = [
-                   candidate.user.last_name]
+                    candidate.user.first_name + ' ' + candidate.user.last_name]
 
         context['votes'] = vote_totals
         context['races'] = race_and_candidates
+        return context
+
+
+class AlertUsers(generic.ListView):
+    model = Election
+    template_name = 'elections/alertUsers.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(AlertUsers, self).get_context_data(**kwargs)
+
+        active_election_list = []
+        addresses_to_email = []
+
+        for election in Election.objects.all():
+            if election.in_election_window():
+                active_election_list.append(election.election_text)
+
+        for candidate in Candidate.objects.all():
+            addresses_to_email.append(candidate.user.email)
+        context['elections'] = active_election_list
+        context['email_addresses'] = addresses_to_email
         return context
 
 
@@ -143,14 +164,14 @@ class ResultsView(generic.DetailView):
 class JSONResponseMixin(object):
     def render_to_context(self, context):
         return self.get_json_response(self.convert_context_to_json(context))
-        
+
     def get_json_response(self, content, **httpresponse_kwargs):
         return HttpResponse(content, content_type='application/json', **httpresponse_kwargs)
-        
+
     def convert_context_to_json(self, context):
         return simplejson.dumps(context)
 
-        
+
 class HybridDetailView(JSONResponseMixin, SingleObjectTemplateResponseMixin, BaseDetailView):
     def render_to_response(self, context):
         if self.request_is_ajax():
@@ -158,7 +179,7 @@ class HybridDetailView(JSONResponseMixin, SingleObjectTemplateResponseMixin, Bas
             return JSONResponseMixin.render_to_response(self, obj)
         else:
             return SingleObjectTemplateResponseMisin.render_to_response(self, context)
-            
+
 
 
 def election_register(request, election_id):
@@ -166,7 +187,7 @@ def election_register(request, election_id):
     election_object = get_object_or_404(Election, pk=election_id)
     user_object = get_object_or_404(Voter, pk=request.user.id)
     user_check = Voter.objects.filter(election_id = election_object, user_id = user_object)
-    
+
     if request.method == 'GET':
         ## If the user is registered in the election, then fail, else do something
         if user_check:
@@ -187,9 +208,9 @@ def election_register(request, election_id):
                 })
     elif request.method == 'POST':
         return HttpResponseRedirect(reverse('elections:election_register', args=(election.id,)))
-        
-        
-        
+
+
+
        ## new_voter = Voter(user=user_object, election=election_object)
         ##new_voter.save()
 

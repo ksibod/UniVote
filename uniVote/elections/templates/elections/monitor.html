@@ -3,7 +3,7 @@
 <h1>Election Monitoring</h1>
 
 {% for race, candidates in races.items %}
-    <h3>{{ race }}</h3>
+    <h4>{{ race }}</h4>
     {% for candidate in candidates %}
         {% for cand, num_votes in votes.items %}
             <p style="margin-left: 2em;">{{ candidate }}
