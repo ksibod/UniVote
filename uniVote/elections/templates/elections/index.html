@@ -1,18 +1,6 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}homepage.css" />
-<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
+{% extends "elections/base.html" %}
 
-<a id="logoutButton" href="{% url 'accounts.views.user_logout' %}" >Logout</a>
-
-{% if request.user.is_staff %}
-    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
-    <a id="adminButton" href="/admin/">Administration Panel</a>
-    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
-    <a id="monitorButton" href="/elections/monitor/">Monitor Panel</a>
-{% endif %}
-
-<img id="uniLogo" src="/static/images/uniVote.png" />
-
+{% block content %}
 <!-- If elections are created -->
 {% if latest_election_list %}
 
@@ -35,7 +23,7 @@
             <td><a style="color: blue" class="electionList" href="{% url 'elections:voteform'                   election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
-            <td></td>
+            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
             {% else %}
             <td></td>
             {% endif %}
@@ -49,8 +37,7 @@
             <td><a style="color: blue" class="electionList" href="{% url 'elections:detail'                     election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
-            &nbsp&nbsp&nbsp&nbsp&nbsp
-            <td></td>
+            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
             {% else %}
             <td></td>
             {% endif %}
@@ -64,7 +51,7 @@
             <td><a style="color: blue" class="electionList" href="{% url 'elections:detail'                     election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
-            <td></td>
+            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
             {% else %}
             <td></td>
             {% endif %}
@@ -73,8 +60,18 @@
         {% endif %}
         </tr>
     {% endfor %}
-
 <!-- Displays when no elections are available -->
 {% else %}
     <p id="noElects">No polls are available.</p>
 {% endif %}
+	</table>
+{% endblock %}
+{% block bottom %}
+<!-- Lower links of the voting form -->
+<br><hr>
+<table>
+	<tr>
+		<td><a href="/accounts/logout">Logout of System</a></td>
+	</tr>
+</table>
+{% endblock %}

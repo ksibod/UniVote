@@ -1,3 +1,5 @@
+{% extends "elections/base.html" %}
+{% block content %}
 <h1>{{ election.election_text }}</h1>
 
 <!-- Show a list of results in a table for admins or monitors only FOR NOW -->
@@ -18,10 +20,10 @@
 			{% endfor %}
 
 </table>
-
-
+{% endblock %}
+{% block bottom %}
 <!-- Lower links of the results page -->
-<hr>
+<br><hr>
 <table>
 	<tr>
 		<td><a href="/elections/">Return to Elections</a></td>
@@ -30,3 +32,4 @@
 		<td><a href="/accounts/logout">Logout of System</a></td>
 	</tr>
 </table>
+{% endblock %}

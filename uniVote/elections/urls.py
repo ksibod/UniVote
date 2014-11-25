@@ -1,6 +1,7 @@
 from django.conf.urls import patterns, url
 
 import views
+import models
 
 urlpatterns = patterns(
     '',
@@ -11,11 +12,12 @@ urlpatterns = patterns(
     # EX: /elections/4
     url(r'^(?P<pk>\d+)/$', views.DetailView.as_view(), name='detail'),
     # EX: /elections/4/results
-    # url(r'^(?P<pk>\d+)/results/$',
-    #     views.ResultsView.as_view(),
-    #     name='results'),
+    url(r'^(?P<pk>\d+)/results/$',views.ResultsView.as_view(),name='results'),
     # EX: /elections/4/vote
     url(r'^(?P<election_id>\d+)/vote/$', views.vote, name='vote'),
+    # EX: /elections/4/election_register
+    url(r'^(?P<election_id>\d+)/election_register/$', 
+        views.election_register, name='election_register'),
     # ex: /elections/4/voteform
     url(r'^(?P<pk>\d+)/voteform/$',
         views.VoteFormView.as_view(),
@@ -24,4 +26,5 @@ urlpatterns = patterns(
     url(r'^profile/(?P<pk>\d+)/$',
         views.ProfileView.as_view(),
         name='profile'),
+    url(r'^(?P<pk>\d+)$', views.HybridDetailView.as_view(model=models.Voter)),
     )

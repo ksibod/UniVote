@@ -1,11 +1,23 @@
+{% extends "elections/base.html" %}
+{% block content %}
 <h1>{{ election.election_text }} Elections</h1>
-
-<h3>Races listed:</h3>
-<!-- Cycle through all races assigned to an election -->
+<input type="button" onClick="send_request();" value="Request this page with AJAX">
+This: <span id="ID"></span> --- <span id="idElection"></span> --- <span id="idUser">{{ ID }}</span>
 
 <!-- Check here to see if user is registered, if not have a registration button available -->
-
-
+<form action="{% url 'elections:election_register' election.id %}" method="get">
+{% if user_check %} {{ user_check }}
+ {{ message }}
+{% else %}
+	<form action="{% url 'elections:election_register' election.id %}" method="post">
+		<input type="hidden" name="voter_id" value="{{voter.id}}">
+		<input type="submit" value="Register" />
+	</form>
+{{ message }}
+{% endif %}
+</form>
+<h3>Races listed:</h3>
+<!-- Cycle through all races assigned to an election -->
 <!-- Start loop through races in this election and list race details -->
 {% for race in election.race_set.all %}
 
@@ -27,14 +39,12 @@
 		{% else %}
 			<p>You are not entered ADD BUTTON HERE %}
 		{% endif %}
-		
-		
-		
-{% endfor %}<!-- End race cycle -->
-<br>
+{% endfor %} <!-- End race cycle -->
+{% endblock %}
 
+{% block bottom %}
 <!-- Lower links of the voting form -->
-<hr>
+<br><hr>
 <table>
 	<tr>
 		<td><a href="/elections/">Return to Elections</a></td>
@@ -43,3 +53,5 @@
 		<td><a href="/accounts/logout">Logout of System</a></td>
 	</tr>
 </table>
+{% endblock %}
+

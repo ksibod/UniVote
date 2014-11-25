@@ -1,14 +1,5 @@
-<link rel="stylesheet" href="{{ STATIC_URL }}monitor.css" />
-
-<a id="logoutButton" href="{% url 'accounts.views.user_logout' %}" >Logout</a>
-
-{% if request.user.is_staff %}
-    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
-    <a id="adminButton" href="/admin/">Administration Panel</a>
-    <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
-    <a id="electionsButton" href="/elections/">Return to Elections</a>
-{% endif %}
-
+{% extends "elections/base.html" %}
+{% block content %}
 <h1>Election Monitoring</h1>
 
 {% for race, candidates in races.items %}
@@ -23,3 +14,16 @@
         {% endfor %}
     {% endfor %}
 {% endfor %}
+{% endblock %}
+
+{% block bottom %}
+<br><hr>
+<table>
+	<tr>
+		<td><a href="/elections/">Return to Elections</a></td>
+	</tr>
+	<tr>
+		<td><a href="/accounts/logout">Logout of System</a></td>
+	</tr>
+</table>
+{% endblock %}

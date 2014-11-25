@@ -41,6 +41,14 @@ class Profile(models.Model):
     major = models.CharField(max_length=100, default='')
     interests = models.CharField(max_length=200, default='')
     experience = models.CharField(max_length=200, default='')
+    
+    def as_dict(self):
+        return {
+            'name': self.name,
+            'major': self.major,
+            'interestes': self.interests,
+            'experience': self.experience,
+            }
 
 
 ## Race class represented in the database, it is a container for Candidates
@@ -86,6 +94,7 @@ class Voter(models.Model):
     user = models.ForeignKey(User)
     # user = models.OneToOneField(User)
     election = models.ForeignKey(Election)
+    #approved = is_approved(self,election.name)
 
     # Hold election information for each user
     # This is a dict that holds each election that the voter is approved for.
@@ -124,6 +133,14 @@ class Voter(models.Model):
                 # change from false to true
                 else:
                     self.elections[i] = True
+
+    def as_dict(self):
+        return {
+            #'all_votes': self.all_votes,
+            'id': self.id,
+            'user': self.user,
+            'election_id': self.election,
+            }
 
 
 ## Stores votes in a table with foreign keys to respective attributes

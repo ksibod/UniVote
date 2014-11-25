@@ -1,3 +1,5 @@
+{% extends "elections/base.html" %}
+{% block content %}
 <h1>{{ election.election_text }} Elections</h1>
 
 {% if error_message %}<p><strong>{{ error_message }}</strong></p>{% endif %}
@@ -26,9 +28,11 @@
 <!-- Form submit -->
 <input type="submit" value="Vote" />
 </form>
+{% endblock %}
 
+{% block bottom %}
 <!-- Lower links of the voting form -->
-<hr>
+<br><hr>
 <table>
 	<tr>
 		<td><a href="/elections/">Return to Elections</a></td>
@@ -37,3 +41,4 @@
 		<td><a href="/accounts/logout">Logout of System</a></td>
 	</tr>
 </table>
+{% endblock %}
