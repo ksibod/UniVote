@@ -1,0 +1,26 @@
+{% extends "elections/base.html" %}
+{% block content %}
+<h1>Voter Alerts</h1>
+
+{% for election in elections %}
+    <h3>{{ election }}</h3>
+    {% for email in email_addresses %}
+        <h4>{{ email }}</h4>
+    {% endfor %}
+
+{% endfor %}
+
+
+{% endblock %}
+
+{% block bottom %}
+<br><hr>
+<table>
+    <tr>
+        <td><a href="/elections/">Return to Elections</a></td>
+    </tr>
+    <tr>
+        <td><a href="/accounts/logout">Logout of System</a></td>
+    </tr>
+</table>
+{% endblock %}

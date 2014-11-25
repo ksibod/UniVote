@@ -1,0 +1,48 @@
+body
+{
+    background-color: #3498db;
+    font-family: Helvetica;
+}
+
+#adminButton
+{
+    text-decoration: none;
+    color: white;
+    float: right;
+    margin-right: 1em;
+    margin-top: 2em;
+}
+
+#adminButton:hover
+{
+    color: #2c3e50;
+}
+
+
+#electionsButton
+{
+    text-decoration: none;
+    color: white;
+    float: right;
+    margin-right: 1em;
+    margin-top: 2em;
+}
+
+#electionsButton:hover
+{
+    color: #2c3e50;
+}
+
+#logoutButton
+{
+    text-decoration: none;
+    color: white;
+    float: right;
+    margin-right: 2em;
+    margin-top: 2em;
+}
+
+#logoutButton:hover
+{
+    color: #2c3e50;
+}
