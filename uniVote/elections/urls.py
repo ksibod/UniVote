@@ -58,8 +58,8 @@ urlpatterns = patterns(
 
     # ex: /elections/profile/32
     #url(r'^profile/(?P<pk>\d+)/$',
-     #   views.ProfileView.as_view(),
-      #  name='profile'),
+    #    views.ProfileView.as_view(),
+    #    name='profile'),
 
     url(r'^profile/(?P<pk>\d+)/$',
         views.profile,

@@ -202,32 +202,42 @@ class JSONResponseMixin(object):
         return self.get_json_response(self.convert_context_to_json(context))
 
     def get_json_response(self, content, **httpresponse_kwargs):
-        return HttpResponse(content, content_type='application/json', **httpresponse_kwargs)
+        return HttpResponse(
+            content,
+            content_type='application/json',
+            **httpresponse_kwargs)
 
     def convert_context_to_json(self, context):
         return json.dumps(context)
 
 
-class HybridDetailView(JSONResponseMixin, SingleObjectTemplateResponseMixin, BaseDetailView):
+class HybridDetailView(JSONResponseMixin,
+                       SingleObjectTemplateResponseMixin,
+                       BaseDetailView):
     def render_to_response(self, context):
         if self.request_is_ajax():
             obj = context['object'].as_dict()
             return JSONResponseMixin.render_to_response(self, obj)
         else:
-            return SingleObjectTemplateResponseMixin.render_to_response(self, context)
+            return SingleObjectTemplateResponseMixin.render_to_response(
+                self, context)
 
 
 def election_register(request, election_id):
     # Gets election object
     election_object = get_object_or_404(Election, pk=election_id)
     user_object = get_object_or_404(Voter, pk=request.user.id)
-    user_check = Voter.objects.filter(election_id = election_object, user_id = user_object)
+    user_check = Voter.objects.filter(election_id=election_object,
+                                      user_id=user_object)
 
     if request.method == 'GET':
-        ## If the user is registered in the election, then fail, else do something
+        # If the user is registered in the election, then fail,
+        # else do something.
         if user_check:
             # Redisplay the election voting form:
-            return render(request, 'elections/detail.html',
+            return render(
+                request,
+                'elections/detail.html',
                 {
                     'voter_id': user_check,
                     'election_object': election_object,
@@ -235,20 +245,22 @@ def election_register(request, election_id):
                 })
         else:
 
-            return render(request, 'elections/detail.html',
+            return render(
+                request,
+                'elections/detail.html',
                 {
                     'voter_id': user_check,
                     'election_object': election_object,
                     'message': 'You are registered.',
                 })
-    elif request.method == 'POST':
-        return HttpResponseRedirect(reverse('elections:election_register', args=(election.id,)))
 
+    elif request.method == 'POST':
+        return HttpResponseRedirect(reverse('elections:election_register',
+                                    args=(election.id,)))
 
 
        ## new_voter = Voter(user=user_object, election=election_object)
         ##new_voter.save()
-
 def vote(request, election_id):
     """
     Vote function called from an open election html. When a user casts a vote
@@ -259,7 +271,7 @@ def vote(request, election_id):
     """
 
     # Gets election object
-    election = get_object_or_404(Election, pk=election_id)
+    # election = get_object_or_404(Election, pk=election_id)
     # Gets a list of races that match the election id
     races = Race.objects.filter(election_id=election_id)
 
@@ -274,13 +286,13 @@ def vote(request, election_id):
                 race_object = get_object_or_404(Race, pk=race.id)
                 user_object = get_object_or_404(Voter, pk=request.user.id)
                 candidate_object = get_object_or_404(
-                    Candidate, pk=request.POST['candidate_race_' + str(race.id)])
+                    Candidate,
+                    pk=request.POST['candidate_race_' + str(race.id)])
 
-                # TODO  Below corresponds to voters being registered to vote - it needs to be changed in the models first though
+                # TODO  Below corresponds to voters being registered to vote
+                # it needs to be changed in the models first though
                 #if request.Voter.is_approved() is False:
                 #    return HttpResponse("userNotApproved")
-
-
 
             except (KeyError, Candidate.DoesNotExist):
                 # Redisplay the election voting form:
@@ -305,12 +317,13 @@ def vote(request, election_id):
                     #     'elections/voteform.html',
                     #     {
                     #         'election': election,
-                    #         'error_message': 'You already voted in this race.',
+                    #         'error_message': 'You already voted.',
                     #     })
                     return HttpResponse("alreadyVoted")
 
                 else:
-                    # Create a new databse entry with the objects created above.
+                    # Create a new databse entry with the objects created
+                    # above.
                     # Save the entry.
                     new_vote = Votes(race_voted_in=race_object,
                                      voter_who_voted=user_object,
@@ -320,26 +333,30 @@ def vote(request, election_id):
                     # Send user to a page reporting success of vote
                     """
                     Always return an HttpResponseRedirect after successfully
-                    dealing with POST data. This prevents data from being posted
-                    twice if a user hits the Back button.
+                    dealing with POST data. This prevents data from being
+                    posted twice if a user hits the Back button.
                     """
 
-                    # this is for emailing the confirmation receipt to the voter
+                    # this is for emailing confirmation receipt to the voter
                     timeOfDay = time.strftime("%I:%M")
                     date = time.strftime("%m:%d:%Y")
-                    votedFor = candidate_object.user.first_name + " " + candidate_object.user.last_name
+                    votedFor = candidate_object.user.first_name + " "
+                    votedFor += candidate_object.user.last_name
                     x = uuid.uuid4()
                     confirmationNum = str(x)
 
-                    message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
-                              "Date: " + date + "\n" + "Time: " + timeOfDay + "" \
-                              "You voted for: " + votedFor + "\n" \
-                              "Confirmation Number: " + confirmationNum
+                    message = "Thank you for voting with uniVote! \n\n"
+                    message += "Below is a receipt with your vote details:\n\n"
+                    message += "Date: " + date + "\n" + "Time: " + timeOfDay
+                    message += " You voted for: " + votedFor + "\n"
+                    message += "Confirmation Number: " + confirmationNum
 
                     emailAddress = request.user.email
-                    email = EmailMessage("Vote Confirmation", message, to=emailAddress)
+                    email = EmailMessage("Vote Confirmation",
+                                         message,
+                                         to=emailAddress)
                     email.send()
 
-
-                    #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
+                    # return HttpResponseRedirect(
+                    #    reverse('elections:results', args=(election.id,)))
                     return HttpResponse("Done")
