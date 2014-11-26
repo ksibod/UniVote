@@ -31,26 +31,6 @@ class Election(models.Model):
     in_election_window.short_description = 'In election window?'
 
 
-## Hold data used in a candidate profile page.
-class Profile(models.Model):
-    def __unicode__(self):
-        return self.profile_id
-
-    # Information stored in profile page
-    name = models.CharField(max_length=100, default='')
-    major = models.CharField(max_length=100, default='')
-    interests = models.CharField(max_length=200, default='')
-    experience = models.CharField(max_length=200, default='')
-    
-    def as_dict(self):
-        return {
-            'name': self.name,
-            'major': self.major,
-            'interestes': self.interests,
-            'experience': self.experience,
-            }
-
-
 ## Race class represented in the database, it is a container for Candidates
 class Race(models.Model):
     def __unicode__(self):
@@ -61,10 +41,6 @@ class Race(models.Model):
     race_name = models.CharField(max_length=200, default='')
     race_description = models.CharField(max_length=200, default='')
     race_detail = models.CharField(max_length=1000, default='')
-
-    def is_candidate(self):
-        pass
-        #cand_check = Candidate.objects.filter(candidate_id = request.user.id)
 
 
 # Each candiate is represented in the db.
@@ -77,15 +53,30 @@ class Candidate(models.Model):
     race = models.ForeignKey(Race)
     election = models.ForeignKey(Election)
     user = models.ForeignKey(User)
-    profile_id = 0
 
-    def has_profile(self):
-        if self.profile_id == 0:
-            return False
 
-        else:
-            return True
+## Hold data used in a candidate profile page.
+class Profile(models.Model):
+    def __unicode__(self):
+        return self.id
 
+    # Information stored in profile page
+    #race = models.ForeignKey(Race)
+    #election = models.ForeignKey(Election)
+    candidate = models.ForeignKey(Candidate)
+    major = models.CharField(max_length=100, default='')
+    interests = models.CharField(max_length=200, default='')
+    experience = models.CharField(max_length=200, default='')
+    
+    def as_dict(self):
+        return {
+            'first_name': self.candidate.user.first_name,
+            'last_name': self.user.candidate.last_name,
+            'major': self.major,
+            'interestes': self.interests,
+            'experience': self.experience,
+            }
+            
 
 # Extending the existing User model to allow user to vote once per election:
 # https://docs.djangoproject.com

@@ -1,7 +1,24 @@
 {% extends "elections/base.html" %}
 {% block content %}
-<h1>Candidate Profile</h1>
+<br><br>
+{% if error_message %}
+	<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
+	<p>{{ error_message }} </p>
+	
+	{% ifequal user.id candidate.user_id %}
+	<form>Make Profile Form</form>
+	{% endifequal %}
 
+{% else %}
+
+<h3>Candidate Profile:</h3>
+<ul>
+	<li>{{ candidate.major }}</li>
+	<li>{{ canidate.interests }}</li>
+	<li>{{ candidate.experience }}</li>
+</ul>
+
+{% endif %}
 {% endblock %}
 {% block bottom %}
 <!-- Lower links of the voting form -->

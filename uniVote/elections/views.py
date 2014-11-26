@@ -109,20 +109,29 @@ class AlertUsers(generic.ListView):
 
 
 # stackoverflow.com/questions/9046533/creating-user-profile-pages-in-django
-class ProfileView(generic.DetailView):
-    model = Profile
-    template_name = 'elections/profile.html'
+#class ProfileView(generic.DetailView):
+ #   model = Election
+  #  template_name = 'elections/profile.html'
 
-    def profile_exists(self):
-        pass
 
-    def get_object(self):
-        """Return's the current users profile."""
-        try:
-            return self.request.user.get_profile()
-        except Profile.DoesNotExist:
-            raise NotImplemented(
-                "What if the user doesn't have an associated profile?")
+def profile(request, pk):
+    candidate = Candidate.objects.get(id=pk)
+
+    try:
+        # Gets candidate object
+        my_profile = Profile.objects.get(candidate_id=pk)
+
+    except (KeyError, Profile.DoesNotExist):
+        # Redisplay the election voting form:
+        return render(
+            request,
+            'elections/profile.html',
+            {
+                'candidate': candidate,
+                'error_message': 'This candidate does not have a profile.',
+            })
+    else:
+        return HttpResponseRedirect(reverse('elections:profile', args=(my_profile.candidate_id)))
 
 
 #https://cloud.google.com/appengine/articles/django-nonrel#rh
