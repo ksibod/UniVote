@@ -8,11 +8,10 @@
     <input type="submit" value="Send Voter Alerts">
 </form>
 
-<p>Alert users for the following active elections:</p>
+<p>Send voting alerts to users for the following active election(s):</p>
 {% for election in active_elections %}
 <h3>{{ election }}</h3>
 {% endfor %}
-
 
 {% endblock %}
 
