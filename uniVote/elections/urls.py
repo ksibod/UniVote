@@ -16,6 +16,16 @@ urlpatterns = patterns(
         views.AlertUsers.as_view(),
         name='alertUsers'),
 
+    # EX: /elections/sendingAlerts
+    url(r'^sendingAlerts/$',
+        views.sendAlerts,
+        name='sendAlerts'),
+
+    # EX: /elections/alertsSent
+    url(r'^alertsSent/$',
+        views.AlertsSent.as_view(),
+        name='alertsSent'),
+
     # EX: /elections/monitor/
     url(r'^monitor/$',
         views.MonitorView.as_view(),
@@ -50,9 +60,9 @@ urlpatterns = patterns(
     #url(r'^profile/(?P<pk>\d+)/$',
      #   views.ProfileView.as_view(),
       #  name='profile'),
-        
+
     url(r'^profile/(?P<pk>\d+)/$',
-        views.profile, 
+        views.profile,
         name='profile'),
 
     url(r'^(?P<pk>\d+)$',

@@ -1,18 +1,11 @@
 {% extends "elections/base.html" %}
+
 {% block content %}
+                <br><br>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
 
-<h1>Voter Alerts</h1>
-
-<form action="/elections/sendingAlerts">
-{% csrf_token %}
-    <input type="submit" value="Send Voter Alerts">
-</form>
-
-<p>Alert users for the following active elections:</p>
-{% for election in active_elections %}
-<h3>{{ election }}</h3>
-{% endfor %}
-
+<h1>Alerts Sent!</h1>
 
 {% endblock %}
 
@@ -25,6 +18,5 @@
                     padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
 </td>
     </tr>
-
 </table>
 {% endblock %}

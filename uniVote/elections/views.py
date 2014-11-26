@@ -1,10 +1,9 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.http import HttpResponse
 from django.views import generic
-import json as simplejson
-#from django.utils import simplejson
-from django.views.generic.detail import BaseDetailView, \
-    SingleObjectTemplateResponseMixin
+import json
+from django.views.generic.detail import BaseDetailView
+from django.views.generic.detail import SingleObjectTemplateResponseMixin
 from models import *
 
 # for emailing users with receipt
@@ -90,23 +89,45 @@ class MonitorView(generic.ListView):
 class AlertUsers(generic.ListView):
     model = Election
     template_name = 'elections/alertUsers.html'
+    context_object_name = 'active_elections'
 
-    def get_context_data(self, **kwargs):
-        context = super(AlertUsers, self).get_context_data(**kwargs)
-
-        active_election_list = []
-        addresses_to_email = []
-
+    def get_queryset(self):
+        active_elections = []
         for election in Election.objects.all():
             if election.in_election_window():
-                active_election_list.append(election.election_text)
+                active_elections.append(election.election_text)
+        return active_elections
 
-        for candidate in Candidate.objects.all():
-            addresses_to_email.append(candidate.user.email)
-        context['elections'] = active_election_list
-        context['email_addresses'] = addresses_to_email
-        return context
 
+def sendAlerts(request):
+
+    active_elections = []
+    users_to_email = []
+
+    # Make string of election names of active elections:
+    for election in Election.objects.all():
+        if election.in_election_window():
+            # active_elections += (election.election_text + ' ')
+            active_elections.append(election.election_text)
+
+    for candidate in Candidate.objects.all():
+        users_to_email.append(candidate.user)
+
+    for user in users_to_email:
+        message = 'Hello %s %s. This is a reminder to vote in the ' % (user.first_name, user.last_name)
+        for election in active_elections:
+            message += election + ' '
+
+        message += ' election(s).'
+        email_address = (user.email,)
+        email = EmailMessage('Voting Reminder', message, to=email_address)
+        email.send()
+
+    return redirect('/elections/alertsSent')
+
+
+class AlertsSent(generic.TemplateView):
+    template_name = 'elections/alertsSent.html'
 
 # stackoverflow.com/questions/9046533/creating-user-profile-pages-in-django
 #class ProfileView(generic.DetailView):
@@ -131,7 +152,8 @@ def profile(request, pk):
                 'error_message': 'This candidate does not have a profile.',
             })
     else:
-        return HttpResponseRedirect(reverse('elections:profile', args=(my_profile.candidate_id)))
+        return HttpResponseRedirect(
+            reverse('elections:profile', args=(my_profile.candidate_id)))
 
 
 #https://cloud.google.com/appengine/articles/django-nonrel#rh
@@ -183,7 +205,7 @@ class JSONResponseMixin(object):
         return HttpResponse(content, content_type='application/json', **httpresponse_kwargs)
 
     def convert_context_to_json(self, context):
-        return simplejson.dumps(context)
+        return json.dumps(context)
 
 
 class HybridDetailView(JSONResponseMixin, SingleObjectTemplateResponseMixin, BaseDetailView):

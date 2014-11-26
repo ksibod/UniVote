@@ -67,7 +67,7 @@ class Profile(models.Model):
     major = models.CharField(max_length=100, default='')
     interests = models.CharField(max_length=200, default='')
     experience = models.CharField(max_length=200, default='')
-    
+
     def as_dict(self):
         return {
             'first_name': self.candidate.user.first_name,
@@ -76,7 +76,7 @@ class Profile(models.Model):
             'interestes': self.interests,
             'experience': self.experience,
             }
-            
+
 
 # Extending the existing User model to allow user to vote once per election:
 # https://docs.djangoproject.com

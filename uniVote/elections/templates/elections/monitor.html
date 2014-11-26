@@ -7,18 +7,27 @@
 
 <h1>Election Monitoring</h1>
 
-{% for race, candidates in races.items %}
-    <h4>{{ race }}</h4>
-    {% for candidate in candidates %}
-        {% for cand, num_votes in votes.items %}
-            <p style="margin-left: 2em;">{{ candidate }}
-            {% ifequal cand.user.last_name candidate %}
-             - {{ num_votes }}
-            {% endifequal %}
-            </p>
-        {% endfor %}
-    {% endfor %}
-{% endfor %}
+<h2>{{ election.election_text }}</h2>
+
+<!-- Show a list of results in a table for admins or monitors only FOR NOW -->
+<table>
+    <tr>
+         <!-- Each race will be show in a small table -->
+            {% for race in races %}
+            <table>
+                <th>{{ race.race_name }}</th>
+                <th>Total Votes: {{ race.id.count }}</th>
+                {% for candidate in race.candidate_set.all %}
+                    <tr>
+                        <td>{{ candidate.user.first_name }} {{candidate.user.last_name }}</td>
+                        <td>{{ results.num_votes }}</td></tr>
+                {% endfor %}
+
+            </table></tr>
+            {% endfor %}
+
+</table>
+
 {% endblock %}
 
 {% block bottom %}
