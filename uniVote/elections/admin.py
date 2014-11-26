@@ -4,6 +4,9 @@ from django.contrib.auth.admin import UserAdmin
 from models import *
 
 
+
+
+
 ## This class places candidate creation in the admin-race creation panel
 class CandidateInline(admin.TabularInline):
     model = Candidate
@@ -11,9 +14,33 @@ class CandidateInline(admin.TabularInline):
 
 
 ## This class places voter assignements in the admin panel under elections
-class VoterInline(admin.TabularInline):
-    model = Voter
-    verbose_name_plural = 'Voter Approval'
+class VoterAdmin(admin.ModelAdmin):
+    # model = Voter
+    # verbose_name_plural = 'Voter Approval'
+    list_display = ['user', 'is_approved']
+    ordering = ['user']
+    actions = ['mark_approved', 'mark_not_approved']
+
+    def mark_approved(self, request, queryset):
+        rows_updated = queryset.update(is_approved='a')
+        queryset.update(approved=True)
+        if rows_updated == 1:
+            message_bit = "1 voter was"
+        else:
+            message_bit = "%s voters were" % rows_updated
+        self.message_user(request, "%s successfully updated." % message_bit)
+
+    def mark_not_approved(self, request, queryset):
+        rows_updated = queryset.update(is_approved='n')
+        queryset.update(approved=False)
+        if rows_updated == 1:
+            message_bit = "1 voter was"
+        else:
+            message_bit = "%s voters were" % rows_updated
+        self.message_user(request, "%s successfully updated." % message_bit)
+
+    mark_approved.short_description = "Approve selected voters"
+    mark_not_approved.short_description = "Deny selected voters"
 
 
 ## This adds a race to a givem election under the admin panel
@@ -30,8 +57,8 @@ class ElectionAdmin(admin.ModelAdmin):
     ]
     inlines = [
         RaceInline,
-        CandidateInline,
-        VoterInline,
+        CandidateInline
+        #VoterInline,
         ]
     list_display = (
         'election_text',
@@ -42,7 +69,9 @@ class ElectionAdmin(admin.ModelAdmin):
     list_filter = ['start_date']
     search_fields = ['election_text']
 
+
 ## Registers the used classes for the admin panel
 admin.site.unregister(User)
 admin.site.register(Election, ElectionAdmin)
 admin.site.register(User, UserAdmin)
+admin.site.register(Voter, VoterAdmin)

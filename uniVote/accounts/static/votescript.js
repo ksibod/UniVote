@@ -89,8 +89,9 @@ function voteSuccess()
 {
     swal({   title: "Voted!",
              text: "You have successfully entered your vote(s) in this election. Thank you! We have also sent you an email with a confirmation receipt of your vote.",
-             type: "success"
-    });
-
-    window.location.href = "/elections";
+             type: "success"},
+             function(isConfirm) {
+                if (isConfirm) window.location.href = "/elections";
+             }
+    );
 }

@@ -259,8 +259,6 @@ def election_register(request, election_id):
                                     args=(election.id,)))
 
 
-       ## new_voter = Voter(user=user_object, election=election_object)
-        ##new_voter.save()
 def vote(request, election_id):
     """
     Vote function called from an open election html. When a user casts a vote
@@ -271,38 +269,38 @@ def vote(request, election_id):
     """
 
     # Gets election object
-    # election = get_object_or_404(Election, pk=election_id)
+    #election = get_object_or_404(Election, pk=election_id)
     # Gets a list of races that match the election id
     races = Race.objects.filter(election_id=election_id)
 
+    # check if user is anonymous before casting the vote
     if request.user.is_anonymous():
         return HttpResponse("anonymous")
 
     else:
+
+        user_approved = False
+        new_key = 0
+        approved_voters = Voter.objects.filter(approved=True)
+        for voter in approved_voters:
+            if voter.user_id is request.user.id:
+                user_approved = True
+                new_key = voter.id
+
+        if user_approved:
+            user_object = get_object_or_404(Voter, pk=new_key)
+        else:
+            return HttpResponse("notApproved")
+
         # Cycle through the dynamic list of races and processes the Post data
         for race in races:
             try:
                 # Instance objects need to be made to pass into the database
                 race_object = get_object_or_404(Race, pk=race.id)
-                user_object = get_object_or_404(Voter, pk=request.user.id)
                 candidate_object = get_object_or_404(
-                    Candidate,
-                    pk=request.POST['candidate_race_' + str(race.id)])
-
-                # TODO  Below corresponds to voters being registered to vote
-                # it needs to be changed in the models first though
-                #if request.Voter.is_approved() is False:
-                #    return HttpResponse("userNotApproved")
+                    Candidate, pk=request.POST['candidate_race_' + str(race.id)])
 
             except (KeyError, Candidate.DoesNotExist):
-                # Redisplay the election voting form:
-                # return render(
-                #     request,
-                #     'elections/voteform.html',
-                #     {
-                #         'election': election,
-                #         'error_message': 'You didn\'t select a candidate.',
-                #     })
                 return HttpResponse("noSelection")
             else:
                 # Check for previous vote should go here,
@@ -312,18 +310,10 @@ def vote(request, election_id):
                     voter_who_voted=user_object)
 
                 if vote_check:
-                    # return render(
-                    #     request,
-                    #     'elections/voteform.html',
-                    #     {
-                    #         'election': election,
-                    #         'error_message': 'You already voted.',
-                    #     })
                     return HttpResponse("alreadyVoted")
 
                 else:
-                    # Create a new databse entry with the objects created
-                    # above.
+                    # Create a new databse entry with the objects created above.
                     # Save the entry.
                     new_vote = Votes(race_voted_in=race_object,
                                      voter_who_voted=user_object,
@@ -333,30 +323,25 @@ def vote(request, election_id):
                     # Send user to a page reporting success of vote
                     """
                     Always return an HttpResponseRedirect after successfully
-                    dealing with POST data. This prevents data from being
-                    posted twice if a user hits the Back button.
+                    dealing with POST data. This prevents data from being posted
+                    twice if a user hits the Back button.
                     """
 
-                    # this is for emailing confirmation receipt to the voter
-                    timeOfDay = time.strftime("%I:%M")
+                    # this is for emailing the confirmation receipt to the voter
+                    time_of_day = time.strftime("%I:%M")
                     date = time.strftime("%m:%d:%Y")
-                    votedFor = candidate_object.user.first_name + " "
-                    votedFor += candidate_object.user.last_name
+                    voted_for = candidate_object.user.first_name + " " + candidate_object.user.last_name
                     x = uuid.uuid4()
-                    confirmationNum = str(x)
+                    confirmation_num = str(x)
 
-                    message = "Thank you for voting with uniVote! \n\n"
-                    message += "Below is a receipt with your vote details:\n\n"
-                    message += "Date: " + date + "\n" + "Time: " + timeOfDay
-                    message += " You voted for: " + votedFor + "\n"
-                    message += "Confirmation Number: " + confirmationNum
+                    message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
+                              "Date: " + date + "\n" + "Time: " + time_of_day + "" \
+                              "You voted for: " + voted_for + "\n" \
+                              "Confirmation Number: " + confirmation_num
 
-                    emailAddress = request.user.email
-                    email = EmailMessage("Vote Confirmation",
-                                         message,
-                                         to=emailAddress)
+                    email_address = request.user.email
+                    email = EmailMessage("Vote Confirmation", message, to=[email_address])
                     email.send()
 
-                    # return HttpResponseRedirect(
-                    #    reverse('elections:results', args=(election.id,)))
+                    #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
                     return HttpResponse("Done")

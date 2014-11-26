@@ -4,6 +4,11 @@ from django.contrib.auth.models import User
 
 ## AFTER CHANGING MODELS, issue commands makemigrations, migrate to save in db.
 
+STATUS_CHOICES = (
+    ('a', 'Approved'),
+    ('n', 'Not Approved')
+)
+
 
 ## Election class is represented in the db, it is a container for races
 class Election(models.Model):
@@ -52,7 +57,7 @@ class Candidate(models.Model):
     # each Candidate is related to an race in an election
     race = models.ForeignKey(Race)
     election = models.ForeignKey(Election)
-    user = models.ForeignKey(User)
+    user = models.ForeignKey(User, default='')
 
 
 ## Hold data used in a candidate profile page.
@@ -63,7 +68,7 @@ class Profile(models.Model):
     # Information stored in profile page
     #race = models.ForeignKey(Race)
     #election = models.ForeignKey(Election)
-    candidate = models.ForeignKey(Candidate)
+    candidate = models.ForeignKey(Candidate, default='')
     major = models.CharField(max_length=100, default='')
     interests = models.CharField(max_length=200, default='')
     experience = models.CharField(max_length=200, default='')
@@ -82,29 +87,29 @@ class Profile(models.Model):
 # https://docs.djangoproject.com
 # /en/1.7/topics/auth/customizing/#extending-the-existing-user-model
 class Voter(models.Model):
+
     user = models.ForeignKey(User)
     # user = models.OneToOneField(User)
     election = models.ForeignKey(Election)
-    #approved = is_approved(self,election.name)
+    is_approved = models.CharField(max_length=1, choices=STATUS_CHOICES, default='n')
+    approved = models.BooleanField(default=False)
+
+    #check if they are approved
+    def check_approval(self):
+        if self.is_approved is "Approved":
+            approved = True
+            return True
+        else:
+            approved = False
+            return False
+
+
 
     # Hold election information for each user
     # This is a dict that holds each election that the voter is approved for.
     # After voting, set that election to false, so they can no longer vote.
     #elections = {models.ForeignKey(Election): True}
     #approved = models.BooleanField(default=False)
-
-    def is_approved(self, election_name):
-        #iterate through user 'elections' dictionary
-        for i, test in self.elections:
-            if i.election_text == election_name:
-                #if approved and value is true
-                if test:
-                    return True
-                #if approved but already voted
-                else:
-                    return False
-        # Voter is not approved for this election
-        return False
 
     def add_election(self, election_object):
         self.elections.update({election_object: True})
@@ -131,7 +136,10 @@ class Voter(models.Model):
             'id': self.id,
             'user': self.user,
             'election_id': self.election,
-            }
+        }
+
+    def __str__(self):
+        return self.user.first_name + " " + self.user.last_name
 
 
 ## Stores votes in a table with foreign keys to respective attributes
