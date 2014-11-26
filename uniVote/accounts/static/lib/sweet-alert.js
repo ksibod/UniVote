@@ -1,7 +1,7 @@
 // SweetAlert
 // 2014 (c) - Tristan Edwards
 // github.com/t4t5/sweetalert
-(function(window, document) {
+;(function(window, document) {
 
   var modalClass   = '.sweet-alert',
       overlayClass = '.sweet-overlay',
@@ -17,10 +17,6 @@
         confirmButtonText: 'OK',
         confirmButtonColor: '#AEDEF4',
         cancelButtonText: 'Cancel',
-        showPrompt: false,
-        promptText: null,
-        promptAlign: 'center',
-        promptTextRows: 0,
         imageUrl: null,
         imageSize: null,
         timer: null
@@ -97,15 +93,20 @@
       elem.style.left = '-9999px';
       elem.style.display = 'block';
 
-      var height = elem.clientHeight;
-      var padding = parseInt(getComputedStyle(elem).getPropertyValue('padding'), 10);
+      var height = elem.clientHeight,
+          padding;
+      if (typeof getComputedStyle !== "undefined") { /* IE 8 */
+        padding = parseInt(getComputedStyle(elem).getPropertyValue('padding'), 10);
+      } else{
+        padding = parseInt(elem.currentStyle.padding);
+      }
 
       elem.style.left = '';
       elem.style.display = 'none';
       return ('-' + parseInt(height / 2 + padding) + 'px');
     },
     fadeIn = function(elem, interval) {
-      if(+elem.style.opacity < 1) {
+      if (+elem.style.opacity < 1) {
         interval = interval || 16;
         elem.style.opacity = 0;
         elem.style.display = 'block';
@@ -120,6 +121,7 @@
         };
         tick();
       }
+      elem.style.display = 'block'; //fallback IE8
     },
     fadeOut = function(elem, interval) {
       interval = interval || 16;
@@ -180,25 +182,14 @@
    */
 
   window.sweetAlertInitialize = function() {
-    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><textarea tabIndex="1"></textarea><p>Text</p><button class="cancel" tabIndex="2">Cancel</button><button class="confirm" tabIndex="3">OK</button></div>',
+    var sweetHTML = '<div class="sweet-overlay" tabIndex="-1"></div><div class="sweet-alert" tabIndex="-1"><div class="icon error"><span class="x-mark"><span class="line left"></span><span class="line right"></span></span></div><div class="icon warning"> <span class="body"></span> <span class="dot"></span> </div> <div class="icon info"></div> <div class="icon success"> <span class="line tip"></span> <span class="line long"></span> <div class="placeholder"></div> <div class="fix"></div> </div> <div class="icon custom"></div> <h2>Title</h2><p>Text</p><button class="cancel" tabIndex="2">Cancel</button><button class="confirm" tabIndex="1">OK</button></div>',
         sweetWrap = document.createElement('div');
 
     sweetWrap.innerHTML = sweetHTML;
 
-    //Comment: We insert inside online so the offline overlay covers alerts
-    $("#online").append(sweetWrap);
     // For readability: check sweet-alert.html
-    //document.body.appendChild(sweetWrap);
-
-    // For development use only!
-    /*jQuery.ajax({
-      url: '../lib/sweet-alert.html', // Change path depending on file location
-      dataType: 'html'
-    })
-    .done(function(html) {
-      jQuery('body').append(html);
-    });*/
-  }
+    document.body.appendChild(sweetWrap);
+  };
 
   /*
    * Global sweetAlert function
@@ -241,12 +232,6 @@
         params.confirmButtonText  = arguments[0].confirmButtonText || defaultParams.confirmButtonText;
         params.confirmButtonColor = arguments[0].confirmButtonColor || defaultParams.confirmButtonColor;
         params.cancelButtonText   = arguments[0].cancelButtonText || defaultParams.cancelButtonText;
-
-        params.showPrompt         = arguments[0].showPrompt || defaultParams.showPrompt;
-        params.promptText         = arguments[0].promptText || defaultParams.promptText;
-        params.promptAlign        = arguments[0].promptAlign || defaultParams.promptAlign;
-        params.promptTextRows     = arguments[0].promptTextRows || defaultParams.promptTextRows;
-
         params.imageUrl           = arguments[0].imageUrl || defaultParams.imageUrl;
         params.imageSize          = arguments[0].imageSize || defaultParams.imageSize;
         params.doneFunction       = arguments[1] || null;
@@ -268,8 +253,8 @@
     var modal = getModal();
 
     // Mouse interactions
-    var onButtonEvent = function(e) {
-
+    var onButtonEvent = function(event) {
+      var e = event || window.event;
       var target = e.target || e.srcElement,
           targetedConfirm    = (target.className === 'confirm'),
           modalIsVisible     = hasClass(modal, 'visible'),
@@ -278,22 +263,22 @@
       switch (e.type) {
         case ("mouseover"):
           if (targetedConfirm) {
-            e.target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
+            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
           }
           break;
         case ("mouseout"):
           if (targetedConfirm) {
-            e.target.style.backgroundColor = params.confirmButtonColor;
+            target.style.backgroundColor = params.confirmButtonColor;
           }
           break;
         case ("mousedown"):
           if (targetedConfirm) {
-            e.target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.14);
+            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.14);
           }
           break;
         case ("mouseup"):
           if (targetedConfirm) {
-            e.target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
+            target.style.backgroundColor = colorLuminance(params.confirmButtonColor, -0.04);
           }
           break;
         case ("focus"):
@@ -307,16 +292,9 @@
           }
           break;
         case ("click"):
-          var $promptText  = modal.querySelector('textarea');
-
           if (targetedConfirm && doneFunctionExists && modalIsVisible) { // Clicked "confirm"
 
-            var text = undefined;
-            if (params.showPrompt){
-              text = $promptText.value;
-            }
-
-            params.doneFunction(true, text);
+            params.doneFunction(true);
 
             if (params.closeOnConfirm) {
               closeModal();
@@ -354,11 +332,12 @@
 
     // Remember the current document.onclick event.
     previousDocumentClick = document.onclick;
-    document.onclick = function(e) {
+    document.onclick = function(event) {
+      var e = event || window.event;
       var target = e.target || e.srcElement;
 
       var clickedOnModal = (modal === target),
-          clickedOnModalChild = isDescendant(modal, e.target),
+          clickedOnModalChild = isDescendant(modal, target),
           modalIsVisible = hasClass(modal, 'visible'),
           outsideClickIsAllowed = modal.getAttribute('data-allow-ouside-click') === 'true';
 
@@ -374,15 +353,11 @@
         $modalButtons = modal.querySelectorAll('button:not([type=hidden])');
 
 
-    function handleKeyDown(e) {
-      //Ignore if offline is up
-      var offlineOverlay = $("#offline:visible").length > 0;
-      if (offlineOverlay)
-        return;
-
+    function handleKeyDown(event) {
+      var e = event || window.event;
       var keyCode = e.keyCode || e.which;
 
-      if ([9,13,27].indexOf(keyCode) === -1) {
+      if ([9,13,32,27].indexOf(keyCode) === -1) {
         // Don't do work on keys we don't care about.
         return;
       }
@@ -416,13 +391,9 @@
         setFocusStyle($targetElement, params.confirmButtonColor); // TODO
 
       } else {
-        //Allow enter for multiLine
-        var multiRow = params.showPrompt && params.promptTextRows > 1;
-
-        //Enter
-        if (!multiRow && (keyCode === 13)) {
+        if (keyCode === 13 || keyCode === 32) {
             if (btnIndex === -1) {
-              // ENTER clicked outside of a button.
+              // ENTER/SPACE clicked outside of a button.
               $targetElement = $okButton;
             } else {
               // Do nothing - let the browser handle it.
@@ -437,7 +408,6 @@
         }
 
         if ($targetElement !== undefined) {
-          e.preventDefault(); //prevent any visible change
           fireClick($targetElement, e);
         }
       }
@@ -446,7 +416,8 @@
     previousWindowKeyDown = window.onkeydown;
     window.onkeydown = handleKeyDown;
 
-    function handleOnBlur(e) {
+    function handleOnBlur(event) {
+      var e = event || window.event;
       var $targetElement = e.target || e.srcElement,
           $focusElement = e.relatedTarget,
           modalIsVisible = hasClass(modal, 'visible');
@@ -515,43 +486,10 @@
     var $title = modal.querySelector('h2'),
         $text = modal.querySelector('p'),
         $cancelBtn = modal.querySelector('button.cancel'),
-        $confirmBtn = modal.querySelector('button.confirm'),
-        $promptText = modal.querySelector('textarea');
+        $confirmBtn = modal.querySelector('button.confirm');
 
     // Title
     $title.innerHTML = escapeHtml(params.title).split("\n").join("<br>");
-
-    //Prompt
-    if (params.showPrompt){
-      //Setup and configure the text area
-      $promptText.style.display = 'inline-block';
-      var text = params.promptText;
-      if (!text)
-        text = "";
-
-      var multiRow = params.promptTextRows > 1;
-      if (multiRow){
-        $promptText.style.resize = "vertical";
-      } else {
-        $promptText.style.resize = "none";
-      }
-      var jqueryPromptText = $($promptText); //requires jquery
-      var minHeight = parseInt(jqueryPromptText.css('min-height'));
-      jqueryPromptText.height(minHeight * params.promptTextRows);
-      jqueryPromptText.css("text-align", params.promptAlign);
-      $promptText.value = escapeHtml(text);
-      $promptText.rows = params.promptTextRows;
-
-      //Select and focus
-      setTimeout(function(){
-        $promptText.select();
-        $promptText.focus();
-      }, 50);
-
-    } else {
-      hide($promptText);
-      $promptText.value = "";
-    }
 
     // Text
     $text.innerHTML = escapeHtml(params.text || '').split("\n").join("<br>");
@@ -725,8 +663,9 @@
     }, 500);
 
     var timer = modal.getAttribute('data-timer');
-    if (timer !== "null") {
-      setTimeout(function() {
+
+    if (timer !== "null" && timer !== "") {
+      modal.timeout = setTimeout(function() {
         closeModal();
       }, timer);
     }
@@ -765,6 +704,7 @@
       previousActiveElement.focus();
     }
     lastFocusedButton = undefined;
+    clearTimeout(modal.timeout);
   }
 
 
@@ -786,18 +726,18 @@
 
   (function () {
 	  if (document.readyState === "complete" || document.readyState === "interactive" && document.body) {
-		  sweetAlertInitialize();
+		  window.sweetAlertInitialize();
 	  } else {
 		  if (document.addEventListener) {
 			  document.addEventListener('DOMContentLoaded', function factorial() {
 				  document.removeEventListener('DOMContentLoaded', arguments.callee, false);
-				  sweetAlertInitialize();
+				  window.sweetAlertInitialize();
 			  }, false);
 		  } else if (document.attachEvent) {
 			  document.attachEvent('onreadystatechange', function() {
 				  if (document.readyState === 'complete') {
 					  document.detachEvent('onreadystatechange', arguments.callee);
-					  sweetAlertInitialize();
+					  window.sweetAlertInitialize();
 				  }
 			  });
 		  }

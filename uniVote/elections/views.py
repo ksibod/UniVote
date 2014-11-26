@@ -267,6 +267,8 @@ def vote(request, election_id):
     function. The data is extracted and processed.Assistance from David Adamo
     Jr. in writing this vote function and using the form POST queries.
     """
+    vote_success = False
+    people_voted_for = []
 
     # Gets election object
     #election = get_object_or_404(Election, pk=election_id)
@@ -283,7 +285,10 @@ def vote(request, election_id):
         new_key = 0
         approved_voters = Voter.objects.filter(approved=True)
         for voter in approved_voters:
-            if voter.user_id is request.user.id:
+            print voter
+            print voter.user_id
+            print request.user.id
+            if voter.user_id == request.user.id:
                 user_approved = True
                 new_key = voter.id
 
@@ -319,29 +324,27 @@ def vote(request, election_id):
                                      voter_who_voted=user_object,
                                      candidate_voted_for=candidate_object)
                     new_vote.save()
+                    people_voted_for.append(candidate_object.user.first_name + " " + candidate_object.user.last_name
+                                            + "---- " + race_object + "\n")
+                    vote_success = True
 
-                    # Send user to a page reporting success of vote
-                    """
-                    Always return an HttpResponseRedirect after successfully
-                    dealing with POST data. This prevents data from being posted
-                    twice if a user hits the Back button.
-                    """
+        if vote_success:
+            # this is for emailing the confirmation receipt to the voter
+            time_of_day = time.strftime("%I:%M")
+            date = time.strftime("%m:%d:%Y")
+            voted_for = ""
+            for votes in people_voted_for:
+                voted_for += votes
 
-                    # this is for emailing the confirmation receipt to the voter
-                    time_of_day = time.strftime("%I:%M")
-                    date = time.strftime("%m:%d:%Y")
-                    voted_for = candidate_object.user.first_name + " " + candidate_object.user.last_name
-                    x = uuid.uuid4()
-                    confirmation_num = str(x)
+            x = uuid.uuid4()
+            confirmation_num = str(x)
 
-                    message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
-                              "Date: " + date + "\n" + "Time: " + time_of_day + "" \
-                              "You voted for: " + voted_for + "\n" \
-                              "Confirmation Number: " + confirmation_num
+            message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
+                      "Date: " + date + "\n" + "Time: " + time_of_day + "\n" \
+                      "You voted for: " + str(voted_for) + "\n" \
+                      "Confirmation Number: " + confirmation_num
 
-                    email_address = request.user.email
-                    email = EmailMessage("Vote Confirmation", message, to=[email_address])
-                    email.send()
-
-                    #return HttpResponseRedirect(reverse('elections:results', args=(election.id,)))
-                    return HttpResponse("Done")
+            email_address = request.user.email
+            email = EmailMessage("Vote Confirmation", message, to=[email_address])
+            email.send()
+            return HttpResponse("Done")

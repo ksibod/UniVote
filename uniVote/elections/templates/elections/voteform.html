@@ -31,7 +31,7 @@
 		
 	<!-- Cycle through all the candidates in the given race -->	
 	{% for candidate in race.candidate_set.all %} 	
-    <input type="radio" name="candidate_race_{{race.id}}" value="{{ candidate.id }}" />
+    <input type="radio" name="candidate_race_{{race.id}}" value="{{ candidate.id }}" class="required"/>
     <label for="race_{{race.id}}">{{ candidate.user.first_name }} {{ candidate.user.last_name }}</label>
 	<a href="/elections/profile/{{ candidate.id }}/">PROFILE</a><br />
 	{% endfor %} <!-- End candidate cycle -->

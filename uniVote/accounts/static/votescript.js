@@ -21,8 +21,8 @@ $(document).ready(function() {
                 if (response === "anonymous") anonymousUser();
                 else if (response === "noSelection") noCandidateSelected();
                 else if (response === "alreadyVoted") alreadyVoted();
-                else if (response === "userNotApproved") notApproved();
-                else if (response === "done") voteSuccess();
+                else if (response === "notApproved") notApproved();
+                else if (response === "Done") voteSuccess();
             },
             error: function(response){
                 // log ajax errors?  something went wrong
@@ -87,11 +87,18 @@ function notApproved()
 // Function to show the user they successfully voted and redirect to the elections page
 function voteSuccess()
 {
-    swal({   title: "Voted!",
-             text: "You have successfully entered your vote(s) in this election. Thank you! We have also sent you an email with a confirmation receipt of your vote.",
-             type: "success"},
-             function(isConfirm) {
-                if (isConfirm) window.location.href = "/elections";
-             }
-    );
+    swal({
+          title: "Voted!",
+          text: "You have successfully submitted your vote. We have sent you an email with a confirmation receipt.",
+          type: "success",
+          confirmButtonColor: "#DD6B55",
+          confirmButtonText: "Ok!",
+          closeOnConfirm: false,
+          closeOnCancel: false
+        },
+        function(isConfirm){
+          if (isConfirm) {
+            window.location.href = "/elections";
+          }
+        });
 }

@@ -103,8 +103,6 @@ class Voter(models.Model):
             approved = False
             return False
 
-
-
     # Hold election information for each user
     # This is a dict that holds each election that the voter is approved for.
     # After voting, set that election to false, so they can no longer vote.
@@ -138,7 +136,7 @@ class Voter(models.Model):
             'election_id': self.election,
         }
 
-    def __str__(self):
+    def __unicode__(self):
         return self.user.first_name + " " + self.user.last_name
 
 

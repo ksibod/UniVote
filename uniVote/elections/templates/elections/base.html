@@ -2,7 +2,7 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
 
-<a id="logoutButton" href="{% url 'accounts.views.user_logout' %}" >Logout</a>
+<a id="logoutButton" href="{% url 'accounts.views.user_logout' %}">Logout</a>
 
 {% if request.user.is_staff %}
     <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
@@ -12,7 +12,7 @@
     <p style="color: white; float: right;margin-top: 2em; margin-right: 1em; cursor: default;">|</p>
     <a id="alertButton" href="/elections/alertUsers/">Alert Users</a>
 {% endif %}
-    <a href="/elections/">
+    <a style="text-decoration: none;" href="/elections/">
 	   <img id="uniLogo" src="/static/images/uniVote.png" />
     </a>
 {% block content %}
