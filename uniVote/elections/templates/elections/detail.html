@@ -30,7 +30,7 @@ This: <span id="ID"></span> --- <span id="idElection"></span> --- <span id="idUs
 		<!-- Cycle through the candidates entered in this race, and post their details -->
 		{% for candidate in race.candidate_set.all %}
 		<li>{{ candidate.user.first_name }} {{ candidate.user.last_name }}
-			<a href="/elections/profile/{{ candidate.id }}/"> profile</a></li>
+			<a href="/elections/profile/{{ candidate.user_id }}/"> profile</a></li>
 		{% endfor %} <!-- End candidate cycle -->
 		</ul><br>
 		<!-- Check to see if user is entered as a candidate in this race, if not then give add button -->

@@ -1,4 +1,5 @@
 from django.db import models
+from django import forms
 from django.utils import timezone as tz
 from django.contrib.auth.models import User
 
@@ -73,14 +74,12 @@ class Profile(models.Model):
     interests = models.CharField(max_length=200, default='')
     experience = models.CharField(max_length=200, default='')
 
-    def as_dict(self):
-        return {
-            'first_name': self.candidate.user.first_name,
-            'last_name': self.user.candidate.last_name,
-            'major': self.major,
-            'interestes': self.interests,
-            'experience': self.experience,
-            }
+
+## Form to handle profile data
+class ProfileForm():
+    class Meta:
+        model = Profile
+        fields = ['major', 'interests', 'experience']
 
 
 # Extending the existing User model to allow user to vote once per election:

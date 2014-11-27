@@ -56,11 +56,6 @@ urlpatterns = patterns(
         views.VoteFormView.as_view(),
         name='voteform'),
 
-    # ex: /elections/profile/32
-    #url(r'^profile/(?P<pk>\d+)/$',
-    #    views.ProfileView.as_view(),
-    #    name='profile'),
-
     url(r'^profile/(?P<pk>\d+)/$',
         views.profile,
         name='profile'),

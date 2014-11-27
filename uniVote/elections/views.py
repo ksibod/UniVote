@@ -100,7 +100,6 @@ class AlertUsers(generic.ListView):
 
 
 def sendAlerts(request):
-
     active_elections = []
     users_to_email = []
 
@@ -129,31 +128,60 @@ def sendAlerts(request):
 class AlertsSent(generic.TemplateView):
     template_name = 'elections/alertsSent.html'
 
-# stackoverflow.com/questions/9046533/creating-user-profile-pages-in-django
-#class ProfileView(generic.DetailView):
- #   model = Election
-  #  template_name = 'elections/profile.html'
 
-
+# Handles candidate profile requests. PK refers to the Candidate
+# user_id. Be aware there is a profile id and a candidate id. They are not equal.
 def profile(request, pk):
-    candidate = Candidate.objects.get(id=pk)
-
-    try:
-        # Gets candidate object
-        my_profile = Profile.objects.get(candidate_id=pk)
-
-    except (KeyError, Profile.DoesNotExist):
-        # Redisplay the election voting form:
-        return render(
-            request,
-            'elections/profile.html',
-            {
-                'candidate': candidate,
-                'error_message': 'This candidate does not have a profile.',
-            })
+    
+    candidate = Candidate.objects.filter(user_id=pk)
+   
+    #If request is POST, process the form data
+    if request.method == 'POST':
+        # Make a form and populate with data.
+        form = ProfileForm(request.POST)
+        
+        # Check if form is valid
+        if form.is_valid():
+            
+            # All the fields in the profile are filled in here.
+            my_profile = Profile(
+                            candidate_id = candidate.id,
+                            major = request.POST['major'],
+                            experience = request.POST['experience'],
+                            interest = request.POST['interests'],
+                            )
+            my_profile.save()
+            
+            # Request is sent back to corresponding page.
+            return render(request, 'elections/profile.html',
+                {
+                    'form': form,
+                    'profile': my_profile,
+                    'candidate': candidate,
+                })
     else:
-        return HttpResponseRedirect(
-            reverse('elections:profile', args=(my_profile.candidate_id)))
+        # If request is a GET, then create a blank form and send back fields.
+        form = ProfileForm()
+            
+        try:
+            # Create a profile object to check if exists.
+            my_profile = Profile.objects.filter(candidate_id=pk)
+
+        except (KeyError, Profile.DoesNotExist):
+            # If there is no candidate, then throw error and display data.
+            return render(request, 'elections/profile.html',
+                {
+                    'candidate': candidate,
+                    'error_message': 'This candidate does not have a profile.',
+                })
+        else:
+            # Profile exists return profile, form and candidate data.
+            return render(request, 'elections/profile.html',
+                {
+                    'form': form,
+                    'profile': my_profile,
+                    'candidate': candidate,
+                })
 
 
 #https://cloud.google.com/appengine/articles/django-nonrel#rh

@@ -1,23 +1,51 @@
 {% extends "elections/base.html" %}
 {% block content %}
 <br><br>
+<!-- This section is for when there is no profile for the candidate -->
 {% if error_message %}
 	<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
 	<p>{{ error_message }} </p>
 	
+	<!-- Check if the user IS the candidate in the profile, then display the form -->
 	{% ifequal user.id candidate.user_id %}
-	<form>Make Profile Form</form>
+	<form action="/election/profile/{{ candidate.user_id }}/" method="POST">
+	{% csrf_token %}
+		<!-- Insert profile fields here -->
+		<label for="candidate.user_id">Major: </label>
+			<input id="major" type="text" name="major" values="{{ major }}">
+			<br>
+		<label for="candidate.user_id">Interests: </label>
+			<input id="interests" type="text" name="interests" value="{{ interests }}">
+			<br>
+		<label for="candidate.user_id">Experience:</label>
+			<input id="experience" type="text" name="experience" value="{{ experience }}">
+			<br>
+		<input type="submit" value="Save">
+	</form>
 	{% endifequal %}
-
-{% else %}
-
-<h3>Candidate Profile:</h3>
-<ul>
-	<li>{{ candidate.major }}</li>
-	<li>{{ canidate.interests }}</li>
-	<li>{{ candidate.experience }}</li>
-</ul>
-
+{% else %} <!-- A profile already exists for the candidate -->
+<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
+	<h3>Candidate Profile:</h3>
+		<p>Major: {{ profile.major }}</p>
+		<p>Experience: {{ profile.interests }}</p>
+		<p>Interests: {{ profile.experience }}</p>
+<hr>
+	<!-- Display a form for editing if the user IS the candidate -->
+	{% ifequal user.id candidate.user_id %}
+	<form action="/election/profile/{{ candidate.user_id }}/" method="POST">
+	{% csrf_token %}
+		<!-- Insert profile fields here -->
+		<label for="candidate.user_id">Major: </label>
+			<input id="major" type="text" name="major" values="{{ major }}">
+			<br>
+		<label for="candidate.user_id">Interests: </label>
+			<input id="interests" type="text" name="interests" value="{{ interests }}">
+			<br>
+		<label for="candidate.user_id">Experience:</label>
+			<input id="experience" type="text" name="experience" value="{{ experience }}">
+			<br>
+		<input type="submit" value="Save">
+	{% endifequal %}
 {% endif %}
 {% endblock %}
 {% block bottom %}
