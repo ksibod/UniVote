@@ -26,15 +26,22 @@
 {% for race in election.race_set.all %}
 	<fieldset class = "radiogroup">
 	<input type="hidden" name="race_id[]" value="{{race.id}}">
-	<legend style="font-weight:bold;"><label for="race{{ forloop.counter }}">{{ race.race_name }}</label></legend>
+	<legend style="font-weight:bold;"><label for="race{{ forloop.counter }}">
+	   {{ race.race_name }}</label></legend>
 	<p>{{ race.race_description }}</p>
-		
+	
+	<table>
 	<!-- Cycle through all the candidates in the given race -->	
-	{% for candidate in race.candidate_set.all %} 	
-    <input type="radio" name="candidate_race_{{race.id}}" value="{{ candidate.id }}" class="required"/>
-    <label for="race_{{race.id}}">{{ candidate.user.first_name }} {{ candidate.user.last_name }}</label>
-	<a href="/elections/profile/{{ candidate.user_id }}/">PROFILE</a><br />
+	{% for candidate in race.candidate_set.all %} 
+
+		<tr>
+			<td><input type="radio" name="candidate_race_{{race.id}}"
+				 value="{{ candidate.id }}" /><label for="race_{{race.id}}">
+				 {{ candidate.user.first_name }} {{ candidate.user.last_name }}</label></td>
+			<td><a href="/elections/profile/{{ candidate.user_id }}/">Profile</a></td>
+		</tr>
 	{% endfor %} <!-- End candidate cycle -->
+	</table>
 	</fieldset>
 	<br><br>
 {% endfor %} <!-- End race cycle -->

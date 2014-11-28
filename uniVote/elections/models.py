@@ -58,8 +58,10 @@ class Candidate(models.Model):
     # each Candidate is related to an race in an election
     race = models.ForeignKey(Race)
     election = models.ForeignKey(Election)
-    user = models.ForeignKey(User, default='')
-
+    ## Using the line below forces the admin to place a candidate in a race before
+    ## creating an election. It's a catch-22.
+    #user = models.ForeignKey(User, default='') #checking if this is causing a bug
+    user = models.ForeignKey(User)
 
 ## Hold data used in a candidate profile page.
 class Profile(models.Model):
@@ -76,7 +78,7 @@ class Profile(models.Model):
 
 
 ## Form to handle profile data
-class ProfileForm():
+class ProfileForm(forms.Form):
     class Meta:
         model = Profile
         fields = ['major', 'interests', 'experience']
@@ -88,7 +90,6 @@ class ProfileForm():
 class Voter(models.Model):
 
     user = models.ForeignKey(User)
-    # user = models.OneToOneField(User)
     election = models.ForeignKey(Election)
     is_approved = models.CharField(max_length=1, choices=STATUS_CHOICES, default='n')
     approved = models.BooleanField(default=False)

@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render, redirect
+from django.shortcuts import get_object_or_404, render, redirect, render_to_response
 from django.http import HttpResponse
 from django.views import generic
 import json
@@ -31,16 +31,29 @@ class DetailView(generic.DetailView):
         # Get dict of elections with all the voters:
         # {'election1': [ V1, V2, V3 ], 'election2': [v1, v2, v3 ],}
         voter_in_election = {}
-        ##for voter in Voter.objects.all():
-          ##  voter_total.update({ 'voter.id': [voter.user, voter.election] })
+
         for voter in Voter.objects.all():
             if voter.election_id in voter_in_election.keys():
                 # add election and its first voter
-                voter_in_election[voter.election_id].append(voter.id)
+                voter_in_election[voter.election_id].append(voter.user.id)
             else:
                 # create new array in this slot:
-                voter_in_election[voter.election_id] = [voter.id]
-
+                voter_in_election[voter.election_id] = [voter.user.id]
+                
+        # Get dict of races and their candidates:
+        # {'race': ['cand1', 'cand2', 'cand3']}
+        race_and_candidates = {}
+        for candidate in Candidate.objects.all():
+            if candidate.race in race_and_candidates.keys():
+                # add race and its first candidate
+                race_and_candidates[candidate.race].append(
+                    candidate.user.id)
+            else:
+                # create new array in this slot:
+                race_and_candidates[candidate.race] = [
+                    candidate.user.id]
+                    
+        context['races'] = race_and_candidates
         context['voters'] = voter_in_election
         return context
 
@@ -133,8 +146,12 @@ class AlertsSent(generic.TemplateView):
 # user_id. Be aware there is a profile id and a candidate id. They are not equal.
 def profile(request, pk):
     
-    candidate = Candidate.objects.filter(user_id=pk)
+    candidates = Candidate.objects.filter(user_id=pk)
    
+    # Handles candidates in multiple elections.
+    for c in candidates:
+        candidate = c
+        
     #If request is POST, process the form data
     if request.method == 'POST':
         # Make a form and populate with data.
@@ -148,7 +165,7 @@ def profile(request, pk):
                             candidate_id = candidate.id,
                             major = request.POST['major'],
                             experience = request.POST['experience'],
-                            interest = request.POST['interests'],
+                            interests = request.POST['interests'],
                             )
             my_profile.save()
             
@@ -165,7 +182,7 @@ def profile(request, pk):
             
         try:
             # Create a profile object to check if exists.
-            my_profile = Profile.objects.filter(candidate_id=pk)
+            my_profile = Profile.objects.get(candidate_id=pk)
 
         except (KeyError, Profile.DoesNotExist):
             # If there is no candidate, then throw error and display data.
@@ -253,40 +270,41 @@ class HybridDetailView(JSONResponseMixin,
 
 def election_register(request, election_id):
     # Gets election object
-    election_object = get_object_or_404(Election, pk=election_id)
-    user_object = get_object_or_404(Voter, pk=request.user.id)
-    user_check = Voter.objects.filter(election_id=election_object,
-                                      user_id=user_object)
+    total = int(election_id)+int(request.user.id)+100
+    ## Creates a new Candidate object in the database
+    new_voter = Voter(
+                        # Kludging id because DB is being screwy.
+                        id=str(total),
+                        user_id=request.user.id,
+                        election_id=election_id,
+                        approved=1,
+                        is_approved='y',
+                        )
+    new_voter.save()
+    
+    ## Returns the user to the previous screen as a registered candidate.
+    return redirect('/elections/'+ election_id + '/')
 
-    if request.method == 'GET':
-        # If the user is registered in the election, then fail,
-        # else do something.
-        if user_check:
-            # Redisplay the election voting form:
-            return render(
-                request,
-                'elections/detail.html',
-                {
-                    'voter_id': user_check,
-                    'election_object': election_object,
-                    'message': 'You are already a candidate in this race.',
-                })
-        else:
+                                    
+## Function called when a user clicks a button to register as a candidate for a race.
+def candidate_register(request, race_id):
+    # Gets election objects
+    race_object = get_object_or_404(Race, id=race_id)
+    election_object = race_object.election
+    election_id = election_object.id
+    
+    ## Creates a new Candidate object in the database
+    new_candidate = Candidate(
+                        race_id=race_id,
+                        user_id=request.user.id,
+                        election_id=election_id
+                        )
+    new_candidate.save()
 
-            return render(
-                request,
-                'elections/detail.html',
-                {
-                    'voter_id': user_check,
-                    'election_object': election_object,
-                    'message': 'You are registered.',
-                })
-
-    elif request.method == 'POST':
-        return HttpResponseRedirect(reverse('elections:election_register',
-                                    args=(election.id,)))
-
-
+    ## Returns the user to the previous screen as a registered candidate.
+    return redirect('/elections/' + str(election_id) + '/')
+    
+   
 def vote(request, election_id):
     """
     Vote function called from an open election html. When a user casts a vote

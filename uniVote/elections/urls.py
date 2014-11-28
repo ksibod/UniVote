@@ -46,8 +46,7 @@ urlpatterns = patterns(
         views.vote,
         name='vote'),
 
-    # EX: /elections/4/election_register
-    url(r'^(?P<election_id>\d+)/election_register/$',
+    url(r'^election_register/(?P<election_id>\d+)/$',
         views.election_register,
         name='election_register'),
 
@@ -59,6 +58,10 @@ urlpatterns = patterns(
     url(r'^profile/(?P<pk>\d+)/$',
         views.profile,
         name='profile'),
+
+    url(r'^candidate_register/(?P<race_id>\d+)/$',
+        views.candidate_register,
+        name='candidate_register'),
 
     url(r'^(?P<pk>\d+)$',
         views.HybridDetailView.as_view(model=models.Voter)),

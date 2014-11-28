@@ -8,49 +8,124 @@
 	
 	<!-- Check if the user IS the candidate in the profile, then display the form -->
 	{% ifequal user.id candidate.user_id %}
-	<form action="/election/profile/{{ candidate.user_id }}/" method="POST">
+	<form action="/elections/profile/{{ candidate.user_id }}/" method="POST">
 	{% csrf_token %}
 		<!-- Insert profile fields here -->
-		<label for="candidate.user_id">Major: </label>
-			<input id="major" type="text" name="major" values="{{ major }}">
-			<br>
-		<label for="candidate.user_id">Interests: </label>
-			<input id="interests" type="text" name="interests" value="{{ interests }}">
-			<br>
-		<label for="candidate.user_id">Experience:</label>
-			<input id="experience" type="text" name="experience" value="{{ experience }}">
-			<br>
-		<input type="submit" value="Save">
+	<hr>
+	<table><th>Create Profile</th>
+		<tr>
+			<td><label for="candidate.user_id">Major: </label></td>
+			<td><input id="major" type="text" name="major" values="{{ major }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Interests: </label></td>
+			<td><input id="interests" type="text" name="interests" value="{{ interests }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Experience:</label></td>
+			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
+		</tr>
+		<tr>
+		<td><input type="submit" value="Save"></td>
+		</tr>
+	</table>
 	</form>
 	{% endifequal %}
-{% else %} <!-- A profile already exists for the candidate -->
-<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
-	<h3>Candidate Profile:</h3>
-		<p>Major: {{ profile.major }}</p>
-		<p>Experience: {{ profile.interests }}</p>
-		<p>Interests: {{ profile.experience }}</p>
-<hr>
-	<!-- Display a form for editing if the user IS the candidate -->
-	{% ifequal user.id candidate.user_id %}
-	<form action="/election/profile/{{ candidate.user_id }}/" method="POST">
+	
+	{% if request.user.is_staff %}
+	<!-- If user is an admin, they can edit the field. -->
+	<form action="/elections/profile/{{ candidate.user_id }}/" method="POST">
 	{% csrf_token %}
 		<!-- Insert profile fields here -->
-		<label for="candidate.user_id">Major: </label>
-			<input id="major" type="text" name="major" values="{{ major }}">
-			<br>
-		<label for="candidate.user_id">Interests: </label>
-			<input id="interests" type="text" name="interests" value="{{ interests }}">
-			<br>
-		<label for="candidate.user_id">Experience:</label>
-			<input id="experience" type="text" name="experience" value="{{ experience }}">
-			<br>
-		<input type="submit" value="Save">
+	<hr>
+	<table><th>Edit Profile</th>
+		<tr>
+			<td><label for="candidate.user_id">Major: </label></td>
+			<td><input id="major" type="text" name="major" values="{{ major }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Interests: </label></td>
+			<td><input id="interests" type="text" name="interests" value="{{ interests }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Experience:</label></td>
+			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
+		</tr>
+		<tr>
+		<td><input type="submit" value="Save"></td>
+		</tr>
+	</table>
+	</form>
+	{% endif %}
+	
+{% else %} <!-- A profile already exists for the candidate -->
+<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
+<h3>Candidate Profile:</h3>
+	<table>
+		<tr>
+			<td>Major:</td><td>{{ profile.major }}</td>
+		</tr>
+			<td>Experience:</td><td>{{ profile.interests }}</td>
+		</tr>
+		<tr>
+			<td>Interests:</td><td>{{ profile.experience }}</td>
+		</tr>
+	</table>
+	<!-- Display a form for editing if the user IS the candidate -->
+	{% ifequal user.id candidate.user_id %}
+	<form action="/elections/profile/{{ candidate.user_id }}/" method="POST">
+	{% csrf_token %}
+		<!-- Insert profile fields here -->
+		<hr>
+		<table><th>Edit Profile</th>
+			<tr>
+				<td><label for="candidate.user_id">Major: </label></td>
+				<td><input id="major" type="text" name="major" values="{{ major }}"></td>
+			</tr>
+			<tr>
+				<td><label for="candidate.user_id">Interests: </label></td>
+				<td><input id="interests" type="text" name="interests" value="{{ interests }}"></td>
+			</tr>
+			<tr>
+				<td><label for="candidate.user_id">Experience:</label></td>
+				<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
+			</tr>
+			<tr>
+			<td><input type="submit" value="Save"></td>
+			</tr>
+		</table>
 	{% endifequal %}
+	
+	{% if request.user.is_staff %}
+	<!-- If user is an admin, they can edit the field. -->
+	<form action="/elections/profile/{{ candidate.user_id }}/" method="POST">
+	{% csrf_token %}
+		<!-- Insert profile fields here -->
+	<hr>
+	<table><th>Edit Profile</th>
+		<tr>
+			<td><label for="candidate.user_id">Major: </label></td>
+			<td><input id="major" type="text" name="major" values="{{ major }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Interests: </label></td>
+			<td><input id="interests" type="text" name="interests" value="{{ interests }}"></td>
+		</tr>
+		<tr>
+			<td><label for="candidate.user_id">Experience:</label></td>
+			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
+		</tr>
+		<tr>
+		<td><input type="submit" value="Save"></td>
+		</tr>
+	</table>
+	</form>
+	{% endif %}
 {% endif %}
 {% endblock %}
 {% block bottom %}
 <!-- Lower links of the voting form -->
-<br><hr>
+<hr>
 <table>
 	<tr>
 		<td><a href="/elections/">Return to Elections</a></td>

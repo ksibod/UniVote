@@ -5,8 +5,6 @@ from models import *
 
 
 
-
-
 ## This class places candidate creation in the admin-race creation panel
 class CandidateInline(admin.TabularInline):
     model = Candidate
@@ -41,8 +39,8 @@ class VoterAdmin(admin.ModelAdmin):
 
     mark_approved.short_description = "Approve selected voters"
     mark_not_approved.short_description = "Deny selected voters"
-
-
+    
+    
 ## This adds a race to a givem election under the admin panel
 class RaceInline(admin.TabularInline):
     model = Race
@@ -57,7 +55,7 @@ class ElectionAdmin(admin.ModelAdmin):
     ]
     inlines = [
         RaceInline,
-        CandidateInline
+        CandidateInline,
         #VoterInline,
         ]
     list_display = (
