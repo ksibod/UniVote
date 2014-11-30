@@ -271,7 +271,16 @@ class HybridDetailView(JSONResponseMixin,
 def election_register(request, election_id):
     # Gets election object
     total = int(election_id)+int(request.user.id)+100
-    ## Creates a new Candidate object in the database
+
+    # check if the user has already registered for this election
+    already_registered = Voter.objects.filter(user_id=request.user.id)
+    print already_registered
+    for voter in already_registered:
+        if str(voter.election_id) == str(election_id):
+            #user is already registered
+            return HttpResponse("alreadyRegistered")
+
+    ## Creates a new Candidate object and save in the database
     new_voter = Voter(
                         # Kludging id because DB is being screwy.
                         id=str(total),
@@ -330,6 +339,7 @@ def vote(request, election_id):
     """
     vote_success = False
     people_voted_for = []
+    total_votes = []
 
     # Gets election object
     #election = get_object_or_404(Election, pk=election_id)
@@ -356,6 +366,7 @@ def vote(request, election_id):
         if user_approved:
             user_object = get_object_or_404(Voter, pk=new_key)
         else:
+            vote_success = False
             return HttpResponse("notApproved")
 
         # Cycle through the dynamic list of races and processes the Post data
@@ -367,6 +378,7 @@ def vote(request, election_id):
                     Candidate, pk=request.POST['candidate_race_' + str(race.id)])
 
             except (KeyError, Candidate.DoesNotExist):
+                vote_success = False
                 return HttpResponse("noSelection")
             else:
                 # Check for previous vote should go here,
@@ -376,6 +388,7 @@ def vote(request, election_id):
                     voter_who_voted=user_object)
 
                 if vote_check:
+                    vote_success = False
                     return HttpResponse("alreadyVoted")
 
                 else:
@@ -384,12 +397,16 @@ def vote(request, election_id):
                     new_vote = Votes(race_voted_in=race_object,
                                      voter_who_voted=user_object,
                                      candidate_voted_for=candidate_object)
-                    new_vote.save()
-                    people_voted_for.append(candidate_object.user.first_name + " " + candidate_object.user.last_name
+                    total_votes.append(new_vote)
+                    people_voted_for.append("\t" + candidate_object.user.first_name + " " + candidate_object.user.last_name
                                             + "---- " + race_object.race_name + "\n")
                     vote_success = True
 
         if vote_success:
+            # save the votes
+            for votes in total_votes:
+                votes.save()
+
             # this is for emailing the confirmation receipt to the voter
             time_of_day = time.strftime("%I:%M")
             date = time.strftime("%m:%d:%Y")
@@ -402,7 +419,7 @@ def vote(request, election_id):
 
             message = "Thank you for voting with uniVote! \n\nBelow is a receipt with your vote details:\n\n\n" \
                       "Date: " + date + "\n" + "Time: " + time_of_day + "\n" \
-                      "You voted for: " + str(voted_for) + "\n" \
+                      "You voted for: \n" + str(voted_for) + "\n" \
                       "Confirmation Number: " + confirmation_num
 
             email_address = request.user.email

@@ -30,7 +30,7 @@ $(document).ready(function() {
                         // code to update DOM here
                         console.log(response);
                         if (response === "registeredVoter") swal("Success!", "We will notify you when you have been approved to vote in this election.", "success");
-                        else if (response === "loginFail") invalidCredentials();
+                        else if (response === "alreadyRegistered") swal("Already Registered", "You have already registered to vote in this election.", "error");
                     },
                     error: function(response){
                         // log ajax errors?  something went wrong

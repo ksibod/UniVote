@@ -93,10 +93,10 @@ class Voter(models.Model):
     user = models.ForeignKey(User)
     election = models.ForeignKey(Election)
     is_approved = models.CharField(max_length=1, choices=STATUS_CHOICES, default='n')
-    approved = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False, editable=False)
 
     # bool value to check if the approval status has already been set to approved
-    already_sent = models.BooleanField(default=False)
+    already_sent = models.BooleanField(default=False, editable=False)
 
     # send email when voters have been approved
     def send_approval_email(self):
