@@ -1,5 +1,9 @@
 {% extends "admin/base.html" %}
 
+{% block extrastyle %}
+    <link href="{{ STATIC_URL }}dashboard.css" rel="stylesheet" type="text/css" />
+{% endblock %}
+
 {% block title %}{{ title }} | uniVote! Admin{% endblock %}
 
 {% block branding %}
