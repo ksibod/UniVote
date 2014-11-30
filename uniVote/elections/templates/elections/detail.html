@@ -1,70 +1,44 @@
 {% extends "elections/base.html" %}
 {% block content %}
 <h1>{{ election.election_text }} Elections</h1>
+<input type="button" onClick="send_request();" value="Request this page with AJAX">
+This: <span id="ID"></span> --- <span id="idElection"></span> --- <span id="idUser">{{ ID }}</span>
+
 <!-- Check here to see if user is registered, if not have a registration button available -->
-<!-- if the election isnt in the dict, there are no voters registered -->
-{% if election.id not in voters.items %}
-
-<!-- Display a register button -->
-	<form action="/elections/election_register/{{ election.id }}/"method="post">
-	{% csrf_token %}
-		<input type="submit" value="Register to Vote" />
+<form action="{% url 'elections:election_register' election.id %}" method="get">
+{% if user_check %} {{ user_check }}
+ {{ message }}
+{% else %}
+	<form action="{% url 'elections:election_register' election.id %}" method="post">
+		<input type="hidden" name="voter_id" value="{{voter.id}}">
+		<input type="submit" value="Register" />
 	</form>
-{% else %} <!-- There is at least one voter registed in this election -->
-	<!-- Now cylce through elections in dict and process -->
-	{% for e, vs in voters.items %}
-	
-		<!-- If the election equals the election in the dict -->
-		{% ifequal e election.id %}
-			<!-- if the user is registered in this election -->
-			{% if user not in vs %}
-			<p>You are registered in this election.</p>
-			{% else %} <!-- Give a button to resiter as a voter -->
-				<form action="/elections/election_register/{{ election.id }}/"method="post">
-				{% csrf_token %}
-				<input type="submit" value="Register to Vote" />
-			</form>
-			{% endif %}
-		{% endifequal %}
-	{% endfor %}
+{{ message }}
 {% endif %}
-
+</form>
 <h3>Races listed:</h3>
 <!-- Cycle through all races assigned to an election -->
 <!-- Start loop through races in this election and list race details -->
 {% for race in election.race_set.all %}
-<hr>
-	<h4>{{ race.race_name }} - {{ race.race_description }}</h4>
+
+	<h4>{{ race.race_name }}</h4>
+	<h6>{{ race.race_description }}</h6>
 	<p>{{ race.race_detail }}</p>
-	<table><th>List of Candidates</th>
+	<h7>List of candidates</h7>
+	<ul>
+
 		<!-- Cycle through the candidates entered in this race, and post their details -->
 		{% for candidate in race.candidate_set.all %}
-		<tr><td>{{ candidate.user.first_name }} {{ candidate.user.last_name }}<td>
-			<td><a href="/elections/profile/{{ candidate.user_id }}/">Profile</a></td>
-		</tr>
+		<li>{{ candidate.user.first_name }} {{ candidate.user.last_name }}
+			<a href="/elections/profile/{{ candidate.id }}/"> profile</a></li>
 		{% endfor %} <!-- End candidate cycle -->
-	</table>
-<!-- Check to see if user is entered as a candidate in this race, if not then give add button -->
-		{% for r, candidates in races.items %}
-			
-			<!-- if the race in the cycle equals the race in the dict, then do -->
-			{% ifequal r race %}
-				
-				<!-- if the user is a candidate entered in this race, then message -->
-				{% if user.id in candidates %}
-				<p>You are a candidate in this race.</p>
-				
-				{% else %} <!-- Give button to enter as a candidate. -->
-				<form action="/elections/candidate_register/{{ race.id }}/"method="post">
-				{% csrf_token %}
-					<input type="submit" value="Become a Candidate" />
-				</form>
-				{% endif %}
-				
-			{% endifequal %}
-			
-		{% endfor %}
-
+		</ul><br>
+		<!-- Check to see if user is entered as a candidate in this race, if not then give add button -->
+		{% if race.is_candidate %}
+			<p>You are entered in this race.</p>
+		{% else %}
+			<p>You are not entered ADD BUTTON HERE %}
+		{% endif %}
 {% endfor %} <!-- End race cycle -->
 {% endblock %}
 
