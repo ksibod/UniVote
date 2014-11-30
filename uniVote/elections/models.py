@@ -98,6 +98,12 @@ class Voter(models.Model):
     # bool value to check if the approval status has already been set to approved
     already_sent = models.BooleanField(default=False, editable=False)
 
+    #bool to show if they have voted or not
+    has_voted = models.BooleanField(default=False, editable=False)
+
+    #store the confirmation num
+    confirmation = models.CharField(max_length=40, default="")
+
     # send email when voters have been approved
     def send_approval_email(self):
         if self.already_sent:
@@ -108,7 +114,7 @@ class Voter(models.Model):
             email = EmailMessage("Voter Registration", "You have been approved to vote in the following election.\n\n"
                                                        "Username: " + user + "\n"
                                                        "Election: " + election_name + "\n\n"
-                                                       "Thank you for using our system!."
+                                                       "Thank you for using our system!"
                                                        "\nuniVote team", to=[self.user.email])
             email.send()
             return

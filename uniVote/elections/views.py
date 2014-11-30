@@ -425,4 +425,10 @@ def vote(request, election_id):
             email_address = request.user.email
             email = EmailMessage("Vote Confirmation", message, to=[email_address])
             email.send()
+
+            #update the voter object
+            user_object.has_voted = True
+            user_object.confirmation = confirmation_num
+            user_object.save()
+
             return HttpResponse("Done")
