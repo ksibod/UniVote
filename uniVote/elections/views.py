@@ -282,9 +282,16 @@ def election_register(request, election_id):
                         is_approved='n',
                         )
     new_voter.save()
-    
-    ## Returns the user to the previous screen as a registered candidate.
-    return redirect('/elections/'+ election_id + '/')
+
+    #notify user that they have registered to vote
+    email = EmailMessage("Voter Registration", "Thanks for registering to vote with uniVote!"
+                                               " \nWe will send you another email when you have been approved."
+                                               "\n\nThanks,\nuniVote team", to=[request.user.email])
+    email.send()
+
+    ## Returns the user to the previous screen as a registered user.
+    #return redirect('/elections/'+ election_id + '/')
+    return HttpResponse("registeredVoter")
 
                                     
 ## Function called when a user clicks a button to register as a candidate for a race.
