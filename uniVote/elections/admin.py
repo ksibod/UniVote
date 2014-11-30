@@ -22,6 +22,13 @@ class VoterAdmin(admin.ModelAdmin):
     def mark_approved(self, request, queryset):
         rows_updated = queryset.update(is_approved='a')
         queryset.update(approved=True)
+
+        # send the approval email to all the people who were approved
+        for voter in queryset:
+            voter.send_approval_email()
+
+        queryset.update(already_sent=True)
+
         if rows_updated == 1:
             message_bit = "1 voter was"
         else:

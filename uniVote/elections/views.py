@@ -285,7 +285,7 @@ def election_register(request, election_id):
 
     #get the election name to email to user
     election = Election.objects.get(pk=election_id)
-    print election
+    #print election
     #notify user that they have registered to vote
     user = str(request.user.username)
     #print user

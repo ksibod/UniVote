@@ -2,6 +2,7 @@ from django.db import models
 from django import forms
 from django.utils import timezone as tz
 from django.contrib.auth.models import User
+from django.core.mail import EmailMessage
 
 ## AFTER CHANGING MODELS, issue commands makemigrations, migrate to save in db.
 
@@ -93,6 +94,24 @@ class Voter(models.Model):
     election = models.ForeignKey(Election)
     is_approved = models.CharField(max_length=1, choices=STATUS_CHOICES, default='n')
     approved = models.BooleanField(default=False)
+
+    # bool value to check if the approval status has already been set to approved
+    already_sent = models.BooleanField(default=False)
+
+    # send email when voters have been approved
+    def send_approval_email(self):
+        if self.already_sent:
+            return
+        else:
+            user = str(self.user.username)
+            election_name = str(self.election.election_text)
+            email = EmailMessage("Voter Registration", "You have been approved to vote in the following election.\n\n"
+                                                       "Username: " + user + "\n"
+                                                       "Election: " + election_name + "\n\n"
+                                                       "Thank you for using our system!."
+                                                       "\nuniVote team", to=[self.user.email])
+            email.send()
+            return
 
     #check if they are approved
     def check_approval(self):
