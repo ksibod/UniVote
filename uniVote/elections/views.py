@@ -122,27 +122,27 @@ def sendAlerts(request):
         if election.in_election_window():
             active_elections.append(election)
 
-    print active_elections
+    #print active_elections
     # for candidate in Candidate.objects.all():
     #     users_to_email.append(candidate.user)
 
     # go through the voter objects and find the ones that have not yet voted in the open elections
     not_voted = Voter.objects.filter(has_voted=False)
-    print not_voted
+    #print not_voted
     for voter in not_voted:
-        print voter
+        #print voter
         for electionid in active_elections:
-            print str(voter.election_id)
-            print str(electionid.id)
+            #print str(voter.election_id)
+            #print str(electionid.id)
             if str(voter.election_id) == str(electionid.id):
                 if voter.approved:
-                    print "THE SAME!"
+                    #print "THE SAME!"
                     needs_to_vote = True
                     user_elections.append(electionid)
                     continue
 
         if needs_to_vote:
-            print user_elections
+            #print user_elections
             message = 'Hello %s %s! \n\nThis is just a reminder to vote in the election(s) that you are ' \
                       'registered for before the election window is over.' \
                       '\n' % (voter.user.first_name, voter.user.last_name)
@@ -229,37 +229,43 @@ class ResultsView(generic.DetailView):
     model = Election
     template_name = 'elections/results.html'
 
-    def get_context_data(self, **kwargs):
-        context = super(ResultsView, self).get_context_data(**kwargs)
 
-        # Get dict of candidate and their votes:
-        # {'candidate1': XX, 'candidate2': XX}
-        vote_totals = {}
+def get_vote_data(request):
 
-        for vote in Votes.objects.all():
-            if vote.candidate_voted_for not in vote_totals.keys():
-                # add candidate and their first vote to the dict:
-                vote_totals[vote.candidate_voted_for] = 1
-            else:
-                # increment candidates vote count by 1:
-                vote_totals[vote.candidate_voted_for] += 1
+    return
 
-        # Get dict of races and their candidates:
-        # {'race': ['cand1', 'cand2', 'cand3']}
-        race_and_candidates = {}
-        for candidate in Candidate.objects.all():
-            if candidate.race in race_and_candidates.keys():
-                # add race and its first candidate
-                race_and_candidates[candidate.race].append(
-                    candidate.user.last_name)
-            else:
-                # create new array in this slot:
-                race_and_candidates[candidate.race] = [
-                    candidate.user.last_name]
 
-        context['votes'] = vote_totals
-        context['races'] = race_and_candidates
-        return context
+    # def get_context_data(self, **kwargs):
+    #     context = super(ResultsView, self).get_context_data(**kwargs)
+    #
+    #     # Get dict of candidate and their votes:
+    #     # {'candidate1': XX, 'candidate2': XX}
+    #     vote_totals = {}
+    #
+    #     for vote in Votes.objects.all():
+    #         if vote.candidate_voted_for not in vote_totals.keys():
+    #             # add candidate and their first vote to the dict:
+    #             vote_totals[vote.candidate_voted_for] = 1
+    #         else:
+    #             # increment candidates vote count by 1:
+    #             vote_totals[vote.candidate_voted_for] += 1
+    #
+    #     # Get dict of races and their candidates:
+    #     # {'race': ['cand1', 'cand2', 'cand3']}
+    #     race_and_candidates = {}
+    #     for candidate in Candidate.objects.all():
+    #         if candidate.race in race_and_candidates.keys():
+    #             # add race and its first candidate
+    #             race_and_candidates[candidate.race].append(
+    #                 candidate.user.last_name)
+    #         else:
+    #             # create new array in this slot:
+    #             race_and_candidates[candidate.race] = [
+    #                 candidate.user.last_name]
+    #
+    #     context['votes'] = vote_totals
+    #     context['races'] = race_and_candidates
+    #     return context
          #vote_counts.append(Votes.objects.filter(race_voted_in = race,
           #    candidate_voted_for = candidate_object))
          #total_election_votes += Votes.objects.filter.(race_id = race)
@@ -297,7 +303,7 @@ def election_register(request, election_id):
 
     # check if the user has already registered for this election
     already_registered = Voter.objects.filter(user_id=request.user.id)
-    print already_registered
+    #print already_registered
     for voter in already_registered:
         if str(voter.election_id) == str(election_id):
             #user is already registered
@@ -363,6 +369,7 @@ def vote(request, election_id):
     vote_success = False
     people_voted_for = []
     total_votes = []
+    votes_for_candidates = []
 
     # Gets election object
     #election = get_object_or_404(Election, pk=election_id)
@@ -415,12 +422,13 @@ def vote(request, election_id):
                     return HttpResponse("alreadyVoted")
 
                 else:
-                    # Create a new databse entry with the objects created above.
+                    # Create a new database entry with the objects created above.
                     # Save the entry.
                     new_vote = Votes(race_voted_in=race_object,
                                      voter_who_voted=user_object,
                                      candidate_voted_for=candidate_object)
                     total_votes.append(new_vote)
+                    votes_for_candidates.append(candidate_object)
                     people_voted_for.append("\t" + candidate_object.user.first_name + " " + candidate_object.user.last_name
                                             + "---- " + race_object.race_name + "\n")
                     vote_success = True
@@ -429,6 +437,9 @@ def vote(request, election_id):
             # save the votes
             for votes in total_votes:
                 votes.save()
+            for candidates in votes_for_candidates:
+                candidates.num_of_votes += 1
+                candidates.save()
 
             # this is for emailing the confirmation receipt to the voter
             time_of_day = time.strftime("%I:%M")

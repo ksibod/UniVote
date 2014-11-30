@@ -64,6 +64,9 @@ class Candidate(models.Model):
     #user = models.ForeignKey(User, default='') #checking if this is causing a bug
     user = models.ForeignKey(User)
 
+    #hold the number of votes
+    num_of_votes = models.IntegerField(default=0)
+
 ## Hold data used in a candidate profile page.
 class Profile(models.Model):
     def __unicode__(self):

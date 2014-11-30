@@ -2,31 +2,40 @@
 
 
 {% block content %}
-
+<script type="text/javascript" src="{{ STATIC_URL }}statistics.js"></script>
+<script type="text/javascript" src="{{ STATIC_URL }}lib/Chart.js"></script>
 
 <h1>{{ election.election_text }}</h1>
-
-<!-- Show a list of results in a table for admins or monitors only FOR NOW -->
-<table><th> Total Number of Votes Cast: ????</th>
-	<tr>
-		 <!-- Each race will be show in a small table -->
+    <hr>
 			{% for race in election.race_set.all %}
-			<table>
-				<th>{{ race.race_name }}</th>
-				<th>Total Votes: {{ race.id.count }}</th>
+
+				<h3 style="text-align:center;">{{ race.race_name }}</h3>
+                <canvas class="myChart" width="800" height="400" style="margin-left:auto;margin-right:auto;margin-bottom:2em;display:block;">
 				{% for candidate in race.candidate_set.all %}
-					<tr>
-						<td>{{ candidate.user.last_name }}</td>
-						<td>{{ results.num_votes }}</td></tr>
+                    <div class="graphData" style="display:none;">
+						<p class="candidates" >{{ candidate.user.first_name }} {{ candidate.user.last_name }}</p>
+                        <p class="votes" >{{ candidate.num_of_votes }}</p>
+                        <p class="counter" >{{ forloop.parentloop.counter0 }}</p>
+                    </div>
 				{% endfor %}
-				
-			</table></tr>
+                </canvas>
+
+    <hr>
 			{% endfor %}
 
 </table>
+
+
+
+
+
+
+
+
+
 {% endblock %}
 {% block bottom %}
-<br><hr>
+<br>
 <table>
     <tr>
         <td>

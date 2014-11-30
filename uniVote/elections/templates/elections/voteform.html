@@ -24,9 +24,9 @@
 	<input type="hidden" name="race_id[]" value="{{race.id}}">
 	<legend style="font-weight:bold;"><label for="race{{ forloop.counter }}">
 	   {{ race.race_name }}</label></legend>
-	<p>{{ race.race_description }}</p>
+	<p style="margin-left:1em;">{{ race.race_description }}</p>
 	
-	<table>
+	<table style="margin-left:4em;">
 	<!-- Cycle through all the candidates in the given race -->	
 	{% for candidate in race.candidate_set.all %} 
 

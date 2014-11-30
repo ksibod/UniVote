@@ -32,12 +32,7 @@
                 </form>
             </td>
             <td><a style="color:blue;" class="electionList" href="{% url 'elections:voteform' election.id %}">{{ election.election_text }}</a>
-            <!-- Offer link to results if user is an admin -->
-            {% if request.user.is_staff %}
-            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
-            {% else %}
-            <td></td>
-            {% endif %}
+            <td><a style="color:blue;" href="{% url 'elections:results' election.id %}">Statistics</a></td>
             <td id="td02">Open</td>
             <td id="td03">{{ election.end_date }}</td>
         </tr>
@@ -47,12 +42,7 @@
         <tr class="electionList" style="color:blue">
             <td></td>
             <td><a style="color:blue;" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a>
-            <!-- Offer link to results if user is an admin -->
-            {% if request.user.is_staff %}
-            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
-            {% else %}
-            <td></td>
-            {% endif %}
+            <td><a style="color:blue;" href="{% url 'elections:results' election.id %}">Statistics</a></td>
             <td id="td02">Closed</td>
             <td id="td03">Closed</td>
         </tr>
@@ -67,12 +57,7 @@
                 </form>
             </td>
             <td><a style="color:blue;" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a>
-            <!-- Offer link to results if user is an admin -->
-            {% if request.user.is_staff %}
-            <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
-            {% else %}
             <td></td>
-            {% endif %}
             <td id="td02">{{ election.start_date }}</td>
             <td id="td03">{{ election.end_date }}</td>
         {% endif %}
