@@ -8,10 +8,6 @@
 <script type="text/javascript" src="{{ STATIC_URL}}votescript.js"></script>
 
 
-                <br><br>
-<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
-                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
-
 
 
 <h1>{{ election.election_text }} Elections</h1>
@@ -38,7 +34,10 @@
 			<td><input type="radio" name="candidate_race_{{race.id}}"
 				 value="{{ candidate.id }}" /><label for="race_{{race.id}}">
 				 {{ candidate.user.first_name }} {{ candidate.user.last_name }}</label></td>
-			<td><a href="/elections/profile/{{ candidate.user_id }}/">Profile</a></td>
+			<td><form style="margin:0;" method="POST" action="/elections/profile/{{ candidate.user_id }}/">
+                    {% csrf_token %}
+                    <input title="View this candidate's profile" type="image" style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/ProfilePicture.png"/></input>
+                </form></td>
 		</tr>
 	{% endfor %} <!-- End candidate cycle -->
 	</table>

@@ -114,26 +114,49 @@ class AlertUsers(generic.ListView):
 
 def sendAlerts(request):
     active_elections = []
-    users_to_email = []
+    user_elections = []
+    needs_to_vote = False
 
     # Make string of election names of active elections:
     for election in Election.objects.all():
         if election.in_election_window():
-            # active_elections += (election.election_text + ' ')
-            active_elections.append(election.election_text)
+            active_elections.append(election)
 
-    for candidate in Candidate.objects.all():
-        users_to_email.append(candidate.user)
+    print active_elections
+    # for candidate in Candidate.objects.all():
+    #     users_to_email.append(candidate.user)
 
-    for user in users_to_email:
-        message = 'Hello %s %s. This is a reminder to vote in the ' % (user.first_name, user.last_name)
-        for election in active_elections:
-            message += election + ' '
+    # go through the voter objects and find the ones that have not yet voted in the open elections
+    not_voted = Voter.objects.filter(has_voted=False)
+    print not_voted
+    for voter in not_voted:
+        print voter
+        for electionid in active_elections:
+            print str(voter.election_id)
+            print str(electionid.id)
+            if str(voter.election_id) == str(electionid.id):
+                if voter.approved:
+                    print "THE SAME!"
+                    needs_to_vote = True
+                    user_elections.append(electionid)
+                    continue
 
-        message += ' election(s).'
-        email_address = (user.email,)
-        email = EmailMessage('Voting Reminder', message, to=email_address)
-        email.send()
+        if needs_to_vote:
+            print user_elections
+            message = 'Hello %s %s! \n\nThis is just a reminder to vote in the election(s) that you are ' \
+                      'registered for before the election window is over.' \
+                      '\n' % (voter.user.first_name, voter.user.last_name)
+
+            message += "The elections and their corresponding end dates/times are listed below:\n"
+            for election in user_elections:
+                message += "\t" + election.election_text + '\t' + str(election.end_date) + "\n"
+
+            message += "\nThanks,\nuniVote team"
+            email_address = voter.user.email
+            email = EmailMessage('Voting Reminder', message, to=[email_address])
+            email.send()
+            needs_to_vote = False
+            user_elections = []
 
     return redirect('/elections/alertsSent')
 
@@ -147,7 +170,7 @@ class AlertsSent(generic.TemplateView):
 def profile(request, pk):
     
     candidates = Candidate.objects.filter(user_id=pk)
-   
+
     # Handles candidates in multiple elections.
     for c in candidates:
         candidate = c
@@ -156,19 +179,19 @@ def profile(request, pk):
     if request.method == 'POST':
         # Make a form and populate with data.
         form = ProfileForm(request.POST)
-        
+
         # Check if form is valid
         if form.is_valid():
-            
+
             # All the fields in the profile are filled in here.
             my_profile = Profile(
                             candidate_id = candidate.id,
-                            major = request.POST['major'],
-                            experience = request.POST['experience'],
-                            interests = request.POST['interests'],
-                            )
+                            major = request.POST.get('major'),
+                            experience = request.POST.get('experience'),
+                            interests = request.POST.get('interests'),
+            )
             my_profile.save()
-            
+
             # Request is sent back to corresponding page.
             return render(request, 'elections/profile.html',
                 {
@@ -179,7 +202,7 @@ def profile(request, pk):
     else:
         # If request is a GET, then create a blank form and send back fields.
         form = ProfileForm()
-            
+
         try:
             # Create a profile object to check if exists.
             my_profile = Profile.objects.get(candidate_id=pk)

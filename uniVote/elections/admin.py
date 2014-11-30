@@ -15,7 +15,7 @@ class CandidateInline(admin.TabularInline):
 class VoterAdmin(admin.ModelAdmin):
     # model = Voter
     # verbose_name_plural = 'Voter Approval'
-    list_display = ['user', 'is_approved']
+    list_display = ['user', 'election', 'is_approved', 'has_voted']
     ordering = ['user']
     actions = ['mark_approved', 'mark_not_approved']
 

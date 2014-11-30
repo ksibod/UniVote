@@ -54,7 +54,7 @@ class Race(models.Model):
 # They are specifically bound to a race.
 class Candidate(models.Model):
     def __unicode__(self):
-        return self.user.last_name
+        return self.user.first_name + " " + self.user.last_name
 
     # each Candidate is related to an race in an election
     race = models.ForeignKey(Race)

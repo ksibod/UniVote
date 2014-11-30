@@ -1,22 +1,25 @@
 {% extends "elections/base.html" %}
 {% block content %}
-<h1>{{ election.election_text }} Elections</h1>
+<h1>{{ election.election_text }}</h1>
 
 
-<h3>Races listed:</h3>
 <!-- Cycle through all races assigned to an election -->
 <!-- Start loop through races in this election and list race details -->
 {% for race in election.race_set.all %}
 <hr>
-	<h4>{{ race.race_name }}</h4>
-	<h6>{{ race.race_description }}</h6>
-	<p>{{ race.race_detail }}</p>
+	<h3 style="padding-left:3em;"><strong>{{ race.race_name }}</strong></h3><h5 style="padding-left: 4.4em;">{{ race.race_description }}</h5>
+	<p style="padding-left: 3.6em;">{{ race.race_detail }}</p>
 
-	<table><th>List of Candidates</th>
+	<table style="margin-left:10em;border:2px solid #2c3e50;border-radius:10px;background-color:#ecf0f1;"><th>List of Candidates</th>
  		<!-- Cycle through the candidates entered in this race, and post their details -->
  		{% for candidate in race.candidate_set.all %}
 		<tr><td>{{ candidate.user.first_name }} {{ candidate.user.last_name }}<td>
-			<td><a href="/elections/profile/{{ candidate.user_id }}/">Profile</a></td>
+			<td>
+                <form style="margin:0;" method="POST" action="/elections/profile/{{ candidate.user_id }}/">
+                    {% csrf_token %}
+                    <input title="View this candidate's profile" type="image" style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/ProfilePicture.png"/></input>
+                </form>
+            </td>
 		</tr>
  		{% endfor %} <!-- End candidate cycle -->
 
@@ -29,12 +32,12 @@
 
 				<!-- if the user is a candidate entered in this race, then message -->
 				{% if user.id in candidates %}
-				<p>You are a candidate in this race.</p>
+				<p style="padding-left:3.6em;color:#c0392b;font-weight:bold;">You are a candidate in this race.</p>
 
 				{% else %} <!-- Give button to enter as a candidate. -->
 				<form action="/elections/candidate_register/{{ race.id }}/"method="post">
 				{% csrf_token %}
-					<input type="submit" value="Become a Candidate" />
+					<input id="becomeCandidateButton" type="submit" value="Become a Candidate" />
 				</form>
 				{% endif %}
 
