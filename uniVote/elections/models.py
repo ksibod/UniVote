@@ -97,10 +97,10 @@ class Voter(models.Model):
     #check if they are approved
     def check_approval(self):
         if self.is_approved is "Approved":
-            approved = True
+            self.approved = True
             return True
         else:
-            approved = False
+            self.approved = False
             return False
 
     # Hold election information for each user

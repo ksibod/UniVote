@@ -277,8 +277,9 @@ def election_register(request, election_id):
                         id=str(total),
                         user_id=request.user.id,
                         election_id=election_id,
-                        approved=1,
-                        is_approved='y',
+                        # changed these so that they are not approved by default  KS
+                        approved=0,
+                        is_approved='n',
                         )
     new_voter.save()
     
