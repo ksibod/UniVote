@@ -7,7 +7,13 @@
     <br><br>
     <table id="t01">
         <tr>
-            <th style="text-align: left">Election Name</th>
+            <col style="width:45px;">
+            <col>
+            <col>
+            <col>
+            <col>
+            <th></th>
+            <th style="text-align:left">Election Name</th>
             <th></th>
             <th>Start Time</th>
             <th>End Time</th>
@@ -20,7 +26,8 @@
         {% if election.in_election_window %}
         <tr class="electionList" style="color:blue"
                 onclick="location.href='{% url 'elections:voteform' election.id %}'">
-            <td><a style="color: blue" class="electionList" href="{% url 'elections:voteform'                   election.id %}">{{ election.election_text }}</a>
+            <td style="text-align:center;"><a class="regToVote" title="Register to vote in this election." href="javascript:registerToVote({{ election.id }});return false;"><img style="height:30px;width:30px;margin-left:15px;" src="{{ STATIC_URL }}images/registericon.png"/></a></td>
+            <td><a style="color:blue;" class="electionList" href="{% url 'elections:voteform' election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
             <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
@@ -34,7 +41,8 @@
         {% elif election.is_closed %}
         <tr class="electionList" style="color:blue"
                 onclick="location.href='{% url 'elections:detail' election.id %}'">
-            <td><a style="color: blue" class="electionList" href="{% url 'elections:detail'                     election.id %}">{{ election.election_text }}</a>
+            <td></td>
+            <td><a style="color:blue;" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
             <td><a href="{% url 'elections:results' election.id %}">Results</a></td>
@@ -48,7 +56,8 @@
         {% else %}
         <tr class="electionList" style="color:blue"
                 onclick="location.href='{% url 'elections:detail' election.id %}'">
-            <td><a style="color: blue" class="electionList" href="{% url 'elections:detail'                     election.id %}">{{ election.election_text }}</a>
+            <td style="text-align:center;"><a class="regToVote" href="javascript:registerToVote({{ election.id }});" title="Register to vote in this election."><img style="height:30px;width:30px;margin-left:15px;" src="{{ STATIC_URL }}images/registericon.png"/></a></td>
+            <td><a style="color:blue;" class="electionList" href="{% url 'elections:detail' election.id %}">{{ election.election_text }}</a>
             <!-- Offer link to results if user is an admin -->
             {% if request.user.is_staff %}
             <td><a href="{% url 'elections:results' election.id %}">Results</a></td>

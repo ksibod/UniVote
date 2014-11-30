@@ -5,6 +5,16 @@ body
 }
 
 
+a
+{
+    text-decoration: none;
+}
+
+a.regToVote
+{
+    cursor: pointer;
+}
+
 #alertButton
 {
     text-decoration: none;
@@ -102,6 +112,13 @@ h2
     color: white;
 }
 
+
+
+
+a.registerToVote
+{
+    display:block;
+}
 
 
 
