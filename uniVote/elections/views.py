@@ -280,11 +280,18 @@ def election_register(request, election_id):
                         # changed these so that they are not approved by default  KS
                         approved=0,
                         is_approved='n',
-                        )
+    )
     new_voter.save()
 
+    #get the election name to email to user
+    election = Election.objects.get(pk=election_id)
+    print election
     #notify user that they have registered to vote
-    email = EmailMessage("Voter Registration", "Thanks for registering to vote with uniVote!"
+    user = str(request.user.username)
+    #print user
+    email = EmailMessage("Voter Registration", "Username: " + user + "\n"
+                                               "Election: " + str(election) + "\n\n"
+                                               "Thanks for registering to vote with uniVote!"
                                                " \nWe will send you another email when you have been approved."
                                                "\n\nThanks,\nuniVote team", to=[request.user.email])
     email.send()
@@ -339,9 +346,9 @@ def vote(request, election_id):
         new_key = 0
         approved_voters = Voter.objects.filter(approved=True)
         for voter in approved_voters:
-            print voter
-            print voter.user_id
-            print request.user.id
+            #print voter
+            #print voter.user_id
+            #print request.user.id
             if voter.user_id == request.user.id:
                 user_approved = True
                 new_key = voter.id
@@ -379,7 +386,7 @@ def vote(request, election_id):
                                      candidate_voted_for=candidate_object)
                     new_vote.save()
                     people_voted_for.append(candidate_object.user.first_name + " " + candidate_object.user.last_name
-                                            + "---- " + race_object + "\n")
+                                            + "---- " + race_object.race_name + "\n")
                     vote_success = True
 
         if vote_success:

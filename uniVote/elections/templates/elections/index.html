@@ -27,7 +27,6 @@
         <tr class="electionList" style="color:blue">
             <td style="text-align:center;">
                 <form style="margin:0;" class="regToVoteForm" method="POST" action="/elections/election_register/{{ election.id }}/">
-                    <input type="hidden" value="{{ election.id }}" />
                     {% csrf_token %}
                     <input title="Register to vote in this election." type="image" style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/registericon.png"/></input>
                 </form>
@@ -63,7 +62,6 @@
         <tr class="electionList" style="color:blue">
             <td style="text-align:center;">
                 <form style="margin:0;" class="regToVoteForm" method="POST" action="/elections/election_register/{{ election.id }}/">
-                    <input type="hidden" value="{{ election.id }}" />
                     {% csrf_token %}
                     <input title="Register to vote in this election." type="image" style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/registericon.png"/></input>
                 </form>

@@ -5,9 +5,6 @@ $(document).ready(function() {
     $("form.regToVoteForm").submit(function(request)
     {
         request.preventDefault();
-
-        var election_id = $(this).find("input:hidden").val();
-        console.log(election_id);
         var logForm = $(this);
 
         swal({
