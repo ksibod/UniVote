@@ -3,7 +3,7 @@
 <br><br>
 <!-- This section is for when there is no profile for the candidate -->
 {% if error_message %}
-	<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
+	<h1>{{ candidate }}</h1>
 	<p>{{ error_message }} </p>
 	
 	<!-- Check if the user IS the candidate in the profile, then display the form -->
@@ -25,10 +25,8 @@
 			<td><label for="candidate.user_id">Experience:</label></td>
 			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
 		</tr>
-		<tr>
-		<td><input type="submit" value="Save"></td>
-		</tr>
 	</table>
+        <input id="saveProfileButton" type="submit" value="Save">
 	</form>
 	{% endifequal %}
 	
@@ -51,15 +49,13 @@
 			<td><label for="candidate.user_id">Experience:</label></td>
 			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
 		</tr>
-		<tr>
-		<td><input type="submit" value="Save"></td>
-		</tr>
 	</table>
+        <input id="saveProfileButton" type="submit" value="Save">
 	</form>
 	{% endif %}
 	
 {% else %} <!-- A profile already exists for the candidate -->
-<h1>{{ candidate.user.first_name }} {{ candidate }}</h1>
+<h1>{{ candidate }}</h1>
 <h3>Candidate Profile:</h3>
 	<table>
 		<tr>
@@ -90,10 +86,8 @@
 				<td><label for="candidate.user_id">Experience:</label></td>
 				<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
 			</tr>
-			<tr>
-			<td><input type="submit" value="Save"></td>
-			</tr>
 		</table>
+        <input id="saveProfileButton" type="submit" value="Save">
 	{% endifequal %}
 	
 	{% if request.user.is_staff %}
@@ -115,20 +109,21 @@
 			<td><label for="candidate.user_id">Experience:</label></td>
 			<td><input id="experience" type="text" name="experience" value="{{ experience }}"></td>
 		</tr>
-		<tr>
-		<td><input type="submit" value="Save"></td>
-		</tr>
 	</table>
+        <input id="saveProfileButton" type="submit" value="Save">
 	</form>
 	{% endif %}
 {% endif %}
 {% endblock %}
 {% block bottom %}
 <!-- Lower links of the voting form -->
-<hr>
+<br><hr>
 <table>
 	<tr>
-		<td><a href="/elections/">Return to Elections</a></td>
+		<td>
+<a style="color:white; text-decoration:none; margin-left:2em; border: 1px solid white; border-radius:8px;
+                    padding: 5px; background-color:#2064db; font-weight: bold;" href="/elections/">Return to Elections</a>
+</td>
 	</tr>
 </table>
 {% endblock %}

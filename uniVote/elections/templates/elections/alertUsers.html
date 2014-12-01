@@ -1,16 +1,16 @@
 {% extends "elections/base.html" %}
 {% block content %}
 
-<h1>Voter Alerts</h1>
+<h1 style="display:inline-block;">Voter Alerts</h1>
 
-<form action="/elections/sendingAlerts">
+<form style="display:inline-block;" action="/elections/sendingAlerts">
 {% csrf_token %}
-    <input type="submit" value="Send Voter Alerts">
+    <input id="sendAlertsButton" type="submit" value="Send Voter Alerts">
 </form>
 
-<p>Send voting alerts to users for the following active election(s):</p>
+<p style="margin-left:4em;">Send voting alerts to users for the following active election(s):</p>
 {% for election in active_elections %}
-<h3>{{ election }}</h3>
+<h3><ul style="margin-left:4em;">{{ election }}</ul></h3>
 {% endfor %}
 
 {% endblock %}

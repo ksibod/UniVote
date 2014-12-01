@@ -34,10 +34,7 @@
 			<td><input type="radio" name="candidate_race_{{race.id}}"
 				 value="{{ candidate.id }}" /><label for="race_{{race.id}}">
 				 {{ candidate.user.first_name }} {{ candidate.user.last_name }}</label></td>
-			<td><form style="margin:0;" method="POST" action="/elections/profile/{{ candidate.user_id }}/">
-                    {% csrf_token %}
-                    <input title="View this candidate's profile" type="image" style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/ProfilePicture.png"/></input>
-                </form></td>
+			<td>  <a href="/elections/profile/{{ candidate.user_id }}/" title="View this candidate's profile" style="height:30px;width:30px;margin-left:10px;"><img style="height:30px;width:30px;margin-left:10px;" src="{{ STATIC_URL }}images/ProfilePicture.png"/></a>
 		</tr>
 	{% endfor %} <!-- End candidate cycle -->
 	</table>
