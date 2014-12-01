@@ -22,7 +22,13 @@ $(document).ready(function() {
                 else if (response === "noSelection") noCandidateSelected();
                 else if (response === "alreadyVoted") alreadyVoted();
                 else if (response === "notApproved") notApproved();
-                else if (response === "Done") voteSuccess();
+                else if (response === "Done") {
+                    FB.ui({
+                      method: 'share',
+                      href: 'https://developers.facebook.com/docs/',
+                    }, function(response){});
+                    voteSuccess();
+                }
             },
             error: function(response){
                 // log ajax errors?  something went wrong

@@ -6,6 +6,36 @@
 <script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 <script type="text/javascript" src="{{ STATIC_URL}}homescript.js"></script>
 
+
+<script>
+    window.fbAsyncInit = function() {
+      FB.init({
+        appId      : '313812018825313',
+        xfbml      : true,
+        version    : 'v2.2'
+      });
+    };
+
+    (function(d, s, id){
+       var js, fjs = d.getElementsByTagName(s)[0];
+       if (d.getElementById(id)) {return;}
+       js = d.createElement(s); js.id = id;
+       js.src = "//connect.facebook.net/en_US/sdk.js";
+       fjs.parentNode.insertBefore(js, fjs);
+     }(document, 'script', 'facebook-jssdk'));
+
+	window.twttr=(function(d,s,id){var t,js,fjs=d.getElementsByTagName(s)[0];
+		if(d.getElementById(id))
+			{return}
+		js=d.createElement(s);
+		js.id=id;
+		js.src="https://platform.twitter.com/widgets.js";
+		fjs.parentNode.insertBefore(js,fjs);
+		return window.twttr||(t={_e:[],ready:function(f){t._e.push(f)}})
+	}(document,"script","twitter-wjs"));
+</script>
+
+
 <a id="logoutButton" href="{% url 'accounts.views.user_logout' %}">Logout</a>
 
 {% if request.user.is_staff %}
@@ -17,6 +47,20 @@
     <a style="text-decoration: none;" href="/elections/">
 	   <img id="uniLogo" src="/static/images/uniVote.png" />
     </a>
+
+<div id="socialMedia">
+	<div
+	  class="fb-like"
+	  data-share="true"
+	  data-width="450"
+	  data-show-faces="true">
+	</div>
+	<a class="twitter-share-button"
+	  href="https://twitter.com/share">
+	Tweet
+	</a>
+</div>
+
 {% block content %}
 <!-- Page content goes here. -->
 {% endblock %}
