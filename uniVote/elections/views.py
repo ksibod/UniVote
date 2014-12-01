@@ -168,7 +168,7 @@ class AlertsSent(generic.TemplateView):
 # Handles candidate profile requests. PK refers to the Candidate
 # user_id. Be aware there is a profile id and a candidate id. They are not equal.
 def profile(request, pk):
-    
+    print pk + "yoloyoloyolo"
     candidates = Candidate.objects.filter(user_id=pk)
 
     # Handles candidates in multiple elections.
@@ -205,7 +205,7 @@ def profile(request, pk):
 
         try:
             # Create a profile object to check if exists.
-            my_profile = Profile.objects.get(candidate_id=pk)
+            my_profile = Profile.objects.get(candidate_id=candidate.id)
 
         except (KeyError, Profile.DoesNotExist):
             # If there is no candidate, then throw error and display data.
